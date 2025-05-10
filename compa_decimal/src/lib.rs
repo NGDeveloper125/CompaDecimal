@@ -83,7 +83,7 @@ fn get_next(current: char) -> Result<char, Error> {
             }
 }
 
-fn add_one(current: String) -> Result<String, Error> {
+pub fn add_one(current: String) -> Result<String, Error> {
     let mut digits: Vec<char> = current.chars().collect();
     let digits_len = digits.len();
     for i in 1..(digits_len +1) {
