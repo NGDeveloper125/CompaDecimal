@@ -16,6 +16,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "compa_decimal_helper"
+version = "0.1.0"
+dependencies = [
+ "compa_decimal",
+]
+
+[[package]]
 name = "num"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
