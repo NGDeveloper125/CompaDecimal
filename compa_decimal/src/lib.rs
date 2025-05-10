@@ -68,7 +68,7 @@ fn generate_set() -> HashMap<usize, char> {
     a
 }
 
-pub fn get_next(current: char) -> Result<char, Error> {
+fn get_next(current: char) -> Result<char, Error> {
     let map = generate_set();
     //let digits: Vec<char> = current.chars().collect();
     //let last_digit = digits.last().unwrap();
@@ -83,6 +83,30 @@ pub fn get_next(current: char) -> Result<char, Error> {
             }
 }
 
+fn add_one(current: String) -> Result<String, Error> {
+    let mut digits: Vec<char> = current.chars().collect();
+    let digits_len = digits.len();
+    for i in 1..(digits_len +1) {
+     
+        let updated_value = match get_next(digits[digits.len() - i]) {
+            Ok(val) => val,
+            Err(error) => return Err(error)
+        };
+
+        match updated_value {
+            '+' => {
+                digits[digits_len - i] = '0';
+            },
+            _ => {
+                digits[digits_len - i] = updated_value;
+                return Ok(digits.into_iter().collect::<String>())
+            }
+        }
+    }
+    digits.insert(0, '1');
+    return Ok(digits.into_iter().collect::<String>());
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -94,5 +118,16 @@ mod tests {
         assert_eq!(get_next('9').unwrap(), 'A');
         assert_eq!(get_next('A').unwrap(), 'a');
         assert_eq!(get_next('z').unwrap(), '+');
+    }
+
+    #[test]
+    fn add_one_test() {
+        assert_eq!(add_one(String::from("0")).unwrap(), "1");
+        assert_eq!(add_one(String::from("1")).unwrap(), "2");
+        assert_eq!(add_one(String::from("9")).unwrap(), "A");
+        assert_eq!(add_one(String::from("z")).unwrap(), "10");
+        assert_eq!(add_one(String::from("10")).unwrap(), "11");
+        assert_eq!(add_one(String::from("19")).unwrap(), "1A");
+        assert_eq!(add_one(String::from("1z")).unwrap(), "20");
     }
 }
