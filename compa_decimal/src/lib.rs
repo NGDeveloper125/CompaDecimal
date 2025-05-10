@@ -1,4 +1,6 @@
-use std::{collections::HashMap, fmt::Error};
+use std::{collections::HashMap, fmt::Error, u128};
+
+use num::{PrimInt, Unsigned};
 
 
 fn generate_set() -> HashMap<usize, char> {
@@ -107,6 +109,25 @@ pub fn add_one(current: String) -> Result<String, Error> {
     return Ok(digits.into_iter().collect::<String>());
 }
 
+pub fn decimal_to_compa<T>(mut num: T) -> String
+    where T: PrimInt + Unsigned {
+    let chars: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz".chars().collect();
+    let base = T::from(chars.len()).unwrap();
+    let mut result = String::new();
+
+    if num == T::zero() {
+        return "0".to_string();
+    }
+
+    while num > T::zero() {
+        let reminder = (num % base).to_usize().unwrap();
+        result.push(chars[reminder]);
+        num = num / base;
+    }
+
+    result.chars().rev().collect()
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -129,5 +150,11 @@ mod tests {
         assert_eq!(add_one(String::from("10")).unwrap(), "11");
         assert_eq!(add_one(String::from("19")).unwrap(), "1A");
         assert_eq!(add_one(String::from("1z")).unwrap(), "20");
+    }
+
+    #[test]
+    fn decimal_to_compa_test() {
+        assert_eq!(decimal_to_compa::<u64>(27068251), "1umQq");
+        assert_eq!(decimal_to_compa::<u128>(340282366920938463463374607431768211455), "7t42bDG5jpsS9t8Tw7cqO7");
     }
 }
