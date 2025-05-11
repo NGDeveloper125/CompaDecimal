@@ -1,9 +1,8 @@
-use std::{collections::HashMap, fmt::Error, u128};
+use std::{collections::HashMap, fmt::Error};
 
 use num::{BigUint, PrimInt, Unsigned, Zero};
 use num_traits::ToPrimitive;
-use num_traits::ConstZero;
-
+mod compadecimal;
 
 fn generate_set() -> HashMap<usize, char> {
     let mut a = HashMap::new();
