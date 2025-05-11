@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 compa_decimal = { path = "../compa_decimal"}
+num-bigint = "0.4"
+rand = "0.9.1"

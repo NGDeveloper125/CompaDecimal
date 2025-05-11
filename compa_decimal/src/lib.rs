@@ -1,6 +1,8 @@
 use std::{collections::HashMap, fmt::Error, u128};
 
-use num::{PrimInt, Unsigned};
+use num::{BigUint, PrimInt, Unsigned, Zero};
+use num_traits::ToPrimitive;
+use num_traits::ConstZero;
 
 
 fn generate_set() -> HashMap<usize, char> {
@@ -152,6 +154,25 @@ pub fn decimal_to_compa<T>(mut num: T) -> String
         let reminder = (num % base).to_usize().unwrap();
         result.push(chars[reminder]);
         num = num / base;
+    }
+
+    result.chars().rev().collect()
+}
+
+pub fn biguint_to_compa(num: BigUint) -> String {
+    let chars: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect();
+    let base = BigUint::from(chars.len());
+    let mut result = String::new();
+    let mut num = num;
+
+    if num.is_zero() {
+        return "0".to_string();
+    }
+
+    while num > BigUint::zero() {
+        let reminder = (&num % &base).to_usize().unwrap();
+        result.push(chars[reminder]);
+        num /= &base;
     }
 
     result.chars().rev().collect()
