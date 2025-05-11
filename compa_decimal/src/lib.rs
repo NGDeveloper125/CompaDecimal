@@ -67,13 +67,42 @@ fn generate_set() -> HashMap<usize, char> {
     a.insert(60,'y');
     a.insert(61, 'Z');
     a.insert(62, 'z');
+    a.insert(63, '!');
+    a.insert(64, '\"');
+    a.insert(65, '#');
+    a.insert(66, '$');
+    a.insert(67, '%');
+    a.insert(68, '&');
+    a.insert(69, '\'');
+    a.insert(70, '(');
+    a.insert(71, ')');
+    a.insert(72, '*');
+    a.insert(73, '+');
+    a.insert(74, ',');
+    a.insert(75, '-');
+    a.insert(76, '.');
+    a.insert(77, '/');
+    a.insert(78, ':');
+    a.insert(79, ';');
+    a.insert(80, '<');
+    a.insert(81, '=');
+    a.insert(82, '>');
+    a.insert(84, '@');
+    a.insert(85, '[');
+    a.insert(86, '\\');
+    a.insert(87, ']');
+    a.insert(88, '^');
+    a.insert(89, '_');
+    a.insert(91, '`');
+    a.insert(92, '|');
+    a.insert(93, '}');
+    a.insert(94, '{');
+    a.insert(95, '~');
     a
-}
+    }
 
 fn get_next(current: char) -> Result<char, Error> {
     let map = generate_set();
-    //let digits: Vec<char> = current.chars().collect();
-    //let last_digit = digits.last().unwrap();
     return match map.iter()
              .find_map(|(key, &val)| if val == current {Some(key)} else {None}) {
                 Some(key) => {
@@ -111,7 +140,7 @@ pub fn add_one(current: String) -> Result<String, Error> {
 
 pub fn decimal_to_compa<T>(mut num: T) -> String
     where T: PrimInt + Unsigned {
-    let chars: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz".chars().collect();
+    let chars: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect();
     let base = T::from(chars.len()).unwrap();
     let mut result = String::new();
 
@@ -138,7 +167,7 @@ mod tests {
         assert_eq!(get_next('0').unwrap(), '1');
         assert_eq!(get_next('9').unwrap(), 'A');
         assert_eq!(get_next('A').unwrap(), 'a');
-        assert_eq!(get_next('z').unwrap(), '+');
+        assert_eq!(get_next('~').unwrap(), '+');
     }
 
     #[test]
@@ -146,15 +175,16 @@ mod tests {
         assert_eq!(add_one(String::from("0")).unwrap(), "1");
         assert_eq!(add_one(String::from("1")).unwrap(), "2");
         assert_eq!(add_one(String::from("9")).unwrap(), "A");
-        assert_eq!(add_one(String::from("z")).unwrap(), "10");
+        assert_eq!(add_one(String::from("z")).unwrap(), "!");
         assert_eq!(add_one(String::from("10")).unwrap(), "11");
         assert_eq!(add_one(String::from("19")).unwrap(), "1A");
-        assert_eq!(add_one(String::from("1z")).unwrap(), "20");
+        assert_eq!(add_one(String::from("1z")).unwrap(), "1!");
+        assert_eq!(add_one(String::from("1~")).unwrap(), "20");
     }
 
     #[test]
     fn decimal_to_compa_test() {
-        assert_eq!(decimal_to_compa::<u64>(27068251), "1umQq");
-        assert_eq!(decimal_to_compa::<u128>(340282366920938463463374607431768211455), "7t42bDG5jpsS9t8Tw7cqO7");
+        assert_eq!(decimal_to_compa::<u64>(27068251), "LwOa");
+        assert_eq!(decimal_to_compa::<u128>(340282366920938463463374607431768211455), "a2o~TWI*I+5G('\\99=ab");
     }
 }
