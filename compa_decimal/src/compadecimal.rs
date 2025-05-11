@@ -9,4 +9,10 @@ impl CompaDecimal {
             value: String::new() 
         }
     }
+
+    fn from(value: &str) -> CompaDecimal {
+        CompaDecimal { 
+            value: value.to_string() 
+        }
+    }
 }
