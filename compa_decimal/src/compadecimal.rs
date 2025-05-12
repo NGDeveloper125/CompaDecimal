@@ -1,3 +1,5 @@
+use num::{PrimInt, Unsigned};
+
 
 struct CompaDecimal {
     value: String 
@@ -39,10 +41,33 @@ impl CompaDecimal {
         self.value = digits.into_iter().collect::<String>();
             
     }
+
+    pub fn decimal_to_compa<T>(mut num: T) -> CompaDecimal
+    where T: PrimInt + Unsigned {
+        let chars: Vec<char> = get_compa_digits();
+        let base = T::from(chars.len()).unwrap();
+        let mut result = String::new();
+
+        if num == T::zero() {
+            return CompaDecimal::new();
+        }
+
+        while num > T::zero() {
+            let reminder = (num % base).to_usize().unwrap();
+            result.push(chars[reminder]);
+            num = num / base;
+        }
+
+        CompaDecimal { value: result.chars().rev().collect() }
+    }
+}
+
+fn get_compa_digits() -> Vec<char> {
+    "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect()
 }
 
 fn get_next(current: &char) -> char {
-    let digits: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect();
+    let digits: Vec<char> = get_compa_digits();
     let index = match digits.iter().position(|digit| digit == current) {
         Some(index) => index,
         None => 0
@@ -92,5 +117,19 @@ mod tests {
         let mut compa_decimal7 = CompaDecimal::from("1~").unwrap();
         compa_decimal7.add_one();
         assert_eq!(compa_decimal7.value, "20");
+    }
+
+    #[test]
+    fn decimal_to_compa_test() {
+
+        let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16);
+        assert_eq!(compa_decimal1.value, "D");
+        let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329);
+        assert_eq!(compa_decimal2.value, "Cb");
+        let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251);
+        assert_eq!(compa_decimal3.value, "LwOa");
+        let compa_decimal4 = CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455);
+        assert_eq!(compa_decimal4.value, "a2o~TWI*I+5G('\\99=ab");
+
     }
 }
