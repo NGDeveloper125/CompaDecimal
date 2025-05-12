@@ -3,12 +3,12 @@ use num_bigint::BigUint;
 use rand::Rng;
 
 fn main() {
-    //println!("{}", decimal_to_compa::<u64>(27068251));
-    let size = 100;
-    let n = generated_random_biguint(size);
-    let m = biguint_to_compa(n);
-    let m_size = m.len();
-    println!("a number with a {} digit goes down to {}", size, m_size);
+    println!("{}", decimal_to_compa::<u128>(340282366920938463463374607431768211455));
+    // let size = 100;
+    // let n = generated_random_biguint(size);
+    // let m = biguint_to_compa(n);
+    // let m_size = m.len();
+    // println!("a number with a {} digit goes down to {}", size, m_size);
 }                                           
 
 fn generated_random_biguint(digits: usize) -> BigUint {
