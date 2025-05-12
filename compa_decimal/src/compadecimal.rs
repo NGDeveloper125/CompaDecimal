@@ -44,7 +44,7 @@ impl CompaDecimal {
 
     pub fn decimal_to_compa<T>(mut num: T) -> String
     where T: PrimInt + Unsigned {
-        let chars: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect();
+        let chars: Vec<char> = get_compa_digits();
         let base = T::from(chars.len()).unwrap();
         let mut result = String::new();
 
@@ -62,8 +62,12 @@ impl CompaDecimal {
     }
 }
 
+fn get_compa_digits() -> Vec<char> {
+    "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect()
+}
+
 fn get_next(current: &char) -> char {
-    let digits: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect();
+    let digits: Vec<char> = get_compa_digits();
     let index = match digits.iter().position(|digit| digit == current) {
         Some(index) => index,
         None => 0
