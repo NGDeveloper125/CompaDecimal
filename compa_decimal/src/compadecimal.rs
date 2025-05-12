@@ -1,3 +1,5 @@
+use num::{PrimInt, Unsigned};
+
 
 struct CompaDecimal {
     value: String 
@@ -38,6 +40,25 @@ impl CompaDecimal {
         digits.insert(0, '1');
         self.value = digits.into_iter().collect::<String>();
             
+    }
+
+    pub fn decimal_to_compa<T>(mut num: T) -> String
+    where T: PrimInt + Unsigned {
+        let chars: Vec<char> = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect();
+        let base = T::from(chars.len()).unwrap();
+        let mut result = String::new();
+
+        if num == T::zero() {
+            return "0".to_string();
+        }
+
+        while num > T::zero() {
+            let reminder = (num % base).to_usize().unwrap();
+            result.push(chars[reminder]);
+            num = num / base;
+        }
+
+        result.chars().rev().collect()
     }
 }
 
