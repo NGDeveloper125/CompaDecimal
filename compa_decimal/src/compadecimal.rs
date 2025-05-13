@@ -1,6 +1,9 @@
 use num::{PrimInt, Unsigned};
 
-
+#[derive(Debug)]
+struct CompaDecimalError {
+    error_message: String
+}
 struct CompaDecimal {
     value: String 
 }
@@ -8,11 +11,11 @@ struct CompaDecimal {
 impl CompaDecimal {
     fn new() -> CompaDecimal {
         CompaDecimal { 
-            value: "1".to_string() 
+            value: "0".to_string() 
         }
     }
 
-    fn from(value: &str) -> Result<CompaDecimal, String> {
+    fn from(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
         Ok(CompaDecimal { 
             value: value.to_string() 
         })
@@ -20,24 +23,31 @@ impl CompaDecimal {
 
     fn add_one(&mut self) {
         let mut digits: Vec<char> = self.value.chars().collect();
-        let digits_len: usize = digits.len() - 1;
+        let digits_len: usize = digits.len();
+
+
+        if self.value.len() == 1 {
+            let updated_value = get_next(&digits[0]);
+            match updated_value {
+                '0' => self.value = "10".to_string(),
+                _ => self.value = updated_value.to_string()
+            }
+            return;
+        }
 
         for i in 1..(digits_len + 1) {
             let digits_len = &digits.len() - i;
             let updated_value = get_next(&digits[digits_len]);
     
             match updated_value {
-                '0' => {
-                    digits[&digits_len - i] = '0';
-                },
+                '0' => digits[digits_len] = '0',
                 _ => {
-                    digits[&digits_len - i] = updated_value;
+                    digits[digits_len] = updated_value;
                     self.value = digits.into_iter().collect::<String>();
                     return;
                 }
             }
         }
-        digits.insert(0, '1');
         self.value = digits.into_iter().collect::<String>();
             
     }
@@ -96,7 +106,7 @@ mod tests {
     fn add_one_test() {
         let mut compa_decimal1 = CompaDecimal::from("0").unwrap();
         compa_decimal1.add_one();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1.value, "1");
         compa_decimal1.add_one();
         assert_eq!(compa_decimal1.value, "2");
         let mut compa_decimal2 = CompaDecimal::from("9").unwrap();
