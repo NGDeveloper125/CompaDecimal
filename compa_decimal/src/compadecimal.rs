@@ -1,6 +1,9 @@
 use num::{PrimInt, Unsigned};
 
-
+#[derive(Debug)]
+struct CompaDecimalError {
+    error_message: String
+}
 struct CompaDecimal {
     value: String 
 }
@@ -8,11 +11,11 @@ struct CompaDecimal {
 impl CompaDecimal {
     fn new() -> CompaDecimal {
         CompaDecimal { 
-            value: "1".to_string() 
+            value: "0".to_string() 
         }
     }
 
-    fn from(value: &str) -> Result<CompaDecimal, String> {
+    fn from(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
         Ok(CompaDecimal { 
             value: value.to_string() 
         })
@@ -20,36 +23,43 @@ impl CompaDecimal {
 
     fn add_one(&mut self) {
         let mut digits: Vec<char> = self.value.chars().collect();
-        let digits_len: usize = digits.len() - 1;
+        let digits_len: usize = digits.len();
+
+
+        if self.value.len() == 1 {
+            let updated_value = get_next(&digits[0]);
+            match updated_value {
+                '0' => self.value = "10".to_string(),
+                _ => self.value = updated_value.to_string()
+            }
+            return;
+        }
 
         for i in 1..(digits_len + 1) {
             let digits_len = &digits.len() - i;
             let updated_value = get_next(&digits[digits_len]);
     
             match updated_value {
-                '0' => {
-                    digits[&digits_len - i] = '0';
-                },
+                '0' => digits[digits_len] = '0',
                 _ => {
-                    digits[&digits_len - i] = updated_value;
+                    digits[digits_len] = updated_value;
                     self.value = digits.into_iter().collect::<String>();
                     return;
                 }
             }
         }
-        digits.insert(0, '1');
         self.value = digits.into_iter().collect::<String>();
             
     }
 
-    pub fn decimal_to_compa<T>(mut num: T) -> CompaDecimal
+    pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
     where T: PrimInt + Unsigned {
         let chars: Vec<char> = get_compa_digits();
         let base = T::from(chars.len()).unwrap();
         let mut result = String::new();
 
         if num == T::zero() {
-            return CompaDecimal::new();
+            return Ok(CompaDecimal::new());
         }
 
         while num > T::zero() {
@@ -58,7 +68,7 @@ impl CompaDecimal {
             num = num / base;
         }
 
-        CompaDecimal { value: result.chars().rev().collect() }
+        Ok(CompaDecimal { value: result.chars().rev().collect() })
     }
 }
 
@@ -96,7 +106,7 @@ mod tests {
     fn add_one_test() {
         let mut compa_decimal1 = CompaDecimal::from("0").unwrap();
         compa_decimal1.add_one();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1.value, "1");
         compa_decimal1.add_one();
         assert_eq!(compa_decimal1.value, "2");
         let mut compa_decimal2 = CompaDecimal::from("9").unwrap();
@@ -122,13 +132,13 @@ mod tests {
     #[test]
     fn decimal_to_compa_test() {
 
-        let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16);
+        let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16).unwrap();
         assert_eq!(compa_decimal1.value, "D");
-        let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329);
+        let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329).unwrap();
         assert_eq!(compa_decimal2.value, "Cb");
-        let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251);
+        let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
         assert_eq!(compa_decimal3.value, "LwOa");
-        let compa_decimal4 = CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455);
+        let compa_decimal4 = CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
         assert_eq!(compa_decimal4.value, "a2o~TWI*I+5G('\\99=ab");
 
     }
