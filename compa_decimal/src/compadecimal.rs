@@ -74,25 +74,38 @@ impl CompaDecimal {
     }
 
     pub fn to_decimal<T>(&self) -> Result<T, CompaDecimalError>
-    where T: PrimInt + Unsigned {
+    where
+        T: PrimInt + Unsigned,
+    {
         let value_digits: Vec<char> = self.value.chars().collect();
         let compa_digits = get_compa_digits();
-        let value_digits_len = self.value.len();
+        let base = T::from(compa_digits.len()).unwrap();
         let mut result: T = T::zero();
-
-        for i in 0..value_digits_len {
-            let digit = &value_digits[value_digits_len - i];
-            match compa_digits.iter().position(|x| x == digit) {
-                Some(position) => match T::checked_add(&result, &T::from(position).unwrap()) {
-                    Some(value) => result = value,
-                    None => return Err(CompaDecimalError { 
-                        error_message: format!("Overflow error! the compa value was too big to store in a {} data type", type_name_of_val(&result)) 
-                    })
-                },
-                None => return Err(CompaDecimalError { error_message: format!("Invalid character: {}", digit)})
+    
+        for digit in value_digits {
+            match compa_digits.iter().position(|x| x == &digit) {
+                Some(position) => {
+                    result = T::checked_mul(&result, &base).ok_or_else(|| CompaDecimalError {
+                        error_message: format!(
+                            "Overflow error! The compa value was too big to store in a {} data type",
+                            type_name_of_val(&result)
+                        ),
+                    })?;
+                    result = T::checked_add(&result, &T::from(position).unwrap()).ok_or_else(|| CompaDecimalError {
+                        error_message: format!(
+                            "Overflow error! The compa value was too big to store in a {} data type",
+                            type_name_of_val(&result)
+                        ),
+                    })?;
+                }
+                None => {
+                    return Err(CompaDecimalError {
+                        error_message: format!("Invalid character: {}", digit),
+                    });
+                }
             }
         }
-
+    
         Ok(result)
     }
 }
@@ -166,5 +179,20 @@ mod tests {
         let compa_decimal4 = CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
         assert_eq!(compa_decimal4.value, "a2o~TWI*I+5G('\\99=ab");
 
+    }
+
+    #[test]
+    fn to_decimal_test() {
+        let compa_decimal1 = CompaDecimal::from("D").unwrap();
+        assert_eq!(compa_decimal1.to_decimal::<u8>().unwrap(), 16);
+
+        let compa_decimal2 = CompaDecimal::from("Cb").unwrap();
+        assert_eq!(compa_decimal2.to_decimal::<u32>().unwrap(), 1329);
+        
+        let compa_decimal3 = CompaDecimal::from("LwOa").unwrap();
+        assert_eq!(compa_decimal3.to_decimal::<u64>().unwrap(), 27068251);
+        
+        let compa_decimal4 = CompaDecimal::from("a2o~TWI*I+5G('\\99=ab").unwrap();
+        assert_eq!(compa_decimal4.to_decimal::<u128>().unwrap(), 340282366920938463463374607431768211455);
     }
 }
