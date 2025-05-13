@@ -52,14 +52,14 @@ impl CompaDecimal {
             
     }
 
-    pub fn decimal_to_compa<T>(mut num: T) -> CompaDecimal
+    pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
     where T: PrimInt + Unsigned {
         let chars: Vec<char> = get_compa_digits();
         let base = T::from(chars.len()).unwrap();
         let mut result = String::new();
 
         if num == T::zero() {
-            return CompaDecimal::new();
+            return Ok(CompaDecimal::new());
         }
 
         while num > T::zero() {
@@ -68,7 +68,7 @@ impl CompaDecimal {
             num = num / base;
         }
 
-        CompaDecimal { value: result.chars().rev().collect() }
+        Ok(CompaDecimal { value: result.chars().rev().collect() })
     }
 }
 
@@ -132,13 +132,13 @@ mod tests {
     #[test]
     fn decimal_to_compa_test() {
 
-        let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16);
+        let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16).unwrap();
         assert_eq!(compa_decimal1.value, "D");
-        let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329);
+        let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329).unwrap();
         assert_eq!(compa_decimal2.value, "Cb");
-        let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251);
+        let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
         assert_eq!(compa_decimal3.value, "LwOa");
-        let compa_decimal4 = CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455);
+        let compa_decimal4 = CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
         assert_eq!(compa_decimal4.value, "a2o~TWI*I+5G('\\99=ab");
 
     }
