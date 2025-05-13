@@ -1,3 +1,5 @@
+use std::any::{type_name, type_name_of_val};
+
 use num::{PrimInt, Unsigned};
 
 #[derive(Debug)]
@@ -54,8 +56,8 @@ impl CompaDecimal {
 
     pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
     where T: PrimInt + Unsigned {
-        let chars: Vec<char> = get_compa_digits();
-        let base = T::from(chars.len()).unwrap();
+        let compa_digits = get_compa_digits();
+        let base = T::from(compa_digits.len()).unwrap();
         let mut result = String::new();
 
         if num == T::zero() {
@@ -64,11 +66,34 @@ impl CompaDecimal {
 
         while num > T::zero() {
             let reminder = (num % base).to_usize().unwrap();
-            result.push(chars[reminder]);
+            result.push(compa_digits[reminder]);
             num = num / base;
         }
 
         Ok(CompaDecimal { value: result.chars().rev().collect() })
+    }
+
+    pub fn to_decimal<T>(&self) -> Result<T, CompaDecimalError>
+    where T: PrimInt + Unsigned {
+        let value_digits: Vec<char> = self.value.chars().collect();
+        let compa_digits = get_compa_digits();
+        let value_digits_len = self.value.len();
+        let mut result: T = T::zero();
+
+        for i in 0..value_digits_len {
+            let digit = &value_digits[value_digits_len - i];
+            match compa_digits.iter().position(|x| x == digit) {
+                Some(position) => match T::checked_add(&result, &T::from(position).unwrap()) {
+                    Some(value) => result = value,
+                    None => return Err(CompaDecimalError { 
+                        error_message: format!("Overflow error! the compa value was too big to store in a {} data type", type_name_of_val(&result)) 
+                    })
+                },
+                None => return Err(CompaDecimalError { error_message: format!("Invalid character: {}", digit)})
+            }
+        }
+
+        Ok(result)
     }
 }
 
