@@ -59,12 +59,21 @@ The library provides the following core functions:
 
 #### `get_next(current: char) -> Result<char, Error>`
 - Retrieves the next character in the CompaDecimal character set.
-- Example: [Example code here]
+- Example:
+  ```rust
+  let current = 'A';
+  let next = get_next(current).unwrap();
+  println!("Next character: {}", next);
+  ```
 
 ### CompaDecimal Struct
 
 A struct that encapsulates a CompaDecimal value and provides methods for conversion and manipulation.
-- Example: [Example code here]
+- Example:
+  ```rust
+  let compa = CompaDecimal::new("A1".to_string());
+  println!("CompaDecimal value: {}", compa.to_string());
+  ```
 
 ## Planned Features
 
@@ -90,13 +99,34 @@ use compadecimal::*;
 ## Examples
 
 ### Convert Decimal to CompaDecimal
-[Example code here]
+```rust
+use compa_decimal::decimal_to_compa;
+
+fn main() {
+    let compa = decimal_to_compa::<u64>(123456789);
+    println!("CompaDecimal: {}", compa); // Output: "1LY7VK"
+}
+```
 
 ### Convert CompaDecimal to Decimal
-[Example code here]
+```rust
+use compa_decimal::compa_to_decimal;
+
+fn main() {
+    let decimal = compa_to_decimal::<u64>("1LY7VK").unwrap();
+    println!("Decimal: {}", decimal); // Output: 123456789
+}
+```
 
 ### Increment a CompaDecimal Value
-[Example code here]
+```rust
+use compa_decimal::add_one;
+
+fn main() {
+    let next = add_one(String::from("1z")).unwrap();
+    println!("Next CompaDecimal: {}", next); // Output: "1!"
+}
+```
 
 ## Contributing
 
