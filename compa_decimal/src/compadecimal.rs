@@ -108,6 +108,10 @@ impl CompaDecimal {
     
         Ok(result)
     }
+
+    pub fn len(&self) -> usize {
+        self.value.len()
+    }
 }
 
 fn get_compa_digits() -> Vec<char> {
@@ -194,5 +198,11 @@ mod tests {
         
         let compa_decimal4 = CompaDecimal::from("a2o~TWI*I+5G('\\99=ab").unwrap();
         assert_eq!(compa_decimal4.to_decimal::<u128>().unwrap(), 340282366920938463463374607431768211455);
+    }
+
+    #[test]
+    fn len_test() {
+        let compa_decimal1 = CompaDecimal::from("123").unwrap();
+        assert_eq!(compa_decimal1.len(), 3);
     }
 }
