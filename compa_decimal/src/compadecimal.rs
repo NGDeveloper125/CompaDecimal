@@ -2,6 +2,8 @@ use std::any::{type_name, type_name_of_val};
 
 use num::{PrimInt, Unsigned};
 
+use crate::decimal_to_compa;
+
 #[derive(Debug)]
 struct CompaDecimalError {
     error_message: String
@@ -113,13 +115,25 @@ impl CompaDecimal {
         self.value.len()
     }
 
-    pub fn increase_by<T>(&mut self, amount: T)
-    where T: PrimInt + Unsigned {
-        let mut looper = T::from(0).unwrap();
-        while amount > looper{
-            self.add_one();
-            looper = looper + T::from(1).unwrap();
-        }
+    pub fn increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>
+    where
+        T: PrimInt + Unsigned,
+    {
+        // Convert the current CompaDecimal value to a u128
+        let current_value = self.to_decimal::<u128>()?;
+    
+        // Convert the amount to u128 and add it to the current value
+        let amount_as_u128 = T::to_u128(&amount).ok_or_else(|| CompaDecimalError {
+            error_message: "Failed to convert the amount to u128".to_string(),
+        })?;
+        let new_value = current_value
+            .checked_add(amount_as_u128)
+            .ok_or_else(|| CompaDecimalError {
+                error_message: "Overflow occurred while adding the amount".to_string(),
+            })?;
+    
+        // Convert the new value back to CompaDecimal
+        CompaDecimal::decimal_to_compa(new_value)
     }
 }
 
@@ -218,19 +232,19 @@ mod tests {
     #[test]
     fn increase_by_test() {
         let mut compa_decimal1 = CompaDecimal::new();
-        compa_decimal1.increase_by::<u8>(1);
+        compa_decimal1 = compa_decimal1.increase_by::<u8>(1).unwrap();
         assert_eq!(compa_decimal1.value, "1");
 
-        let mut compa_decimal1 = CompaDecimal::new();
-        compa_decimal1.increase_by::<u32>(1234);
-        assert_eq!(compa_decimal1.value, "bB");
+        let mut compa_decimal2 = CompaDecimal::new();
+        compa_decimal2 = compa_decimal2.increase_by::<u32>(1234).unwrap();
+        assert_eq!(compa_decimal2.value, "bB");
 
-        let mut compa_decimal1 = CompaDecimal::new();
-        compa_decimal1.increase_by::<u64>(1234567);
-        assert_eq!(compa_decimal1.value, "1r&$");
+        let mut compa_decimal3 = CompaDecimal::new();
+        compa_decimal3 = compa_decimal3.increase_by::<u64>(1234567).unwrap();
+        assert_eq!(compa_decimal3.value, "1r&$");
 
-        let mut compa_decimal1 = CompaDecimal::new();
-        compa_decimal1.increase_by::<u128>(1234556778785);
-        assert_eq!(compa_decimal1.value, "1-Fq}q3");
+        let mut compa_decimal4 = CompaDecimal::new();
+        compa_decimal4 = compa_decimal4.increase_by::<u128>(1234556778785).unwrap();
+        assert_eq!(compa_decimal4.value, "1-Fq}q3");
     }
 }
