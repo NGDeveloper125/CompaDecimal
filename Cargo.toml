@@ -1,4 +1,5 @@
 [workspace]
 members = [
-    "compa_decimal"
+    "compa_decimal",
+    "compa_decimal_helper"
 ]

@@ -112,6 +112,15 @@ impl CompaDecimal {
     pub fn len(&self) -> usize {
         self.value.len()
     }
+
+    pub fn increase_by<T>(&mut self, amount: T)
+    where T: PrimInt + Unsigned {
+        let mut looper = T::from(0).unwrap();
+        while amount > looper{
+            self.add_one();
+            looper = looper + T::from(1).unwrap();
+        }
+    }
 }
 
 fn get_compa_digits() -> Vec<char> {
@@ -204,5 +213,24 @@ mod tests {
     fn len_test() {
         let compa_decimal1 = CompaDecimal::from("123").unwrap();
         assert_eq!(compa_decimal1.len(), 3);
+    }
+
+    #[test]
+    fn increase_by_test() {
+        let mut compa_decimal1 = CompaDecimal::new();
+        compa_decimal1.increase_by::<u8>(1);
+        assert_eq!(compa_decimal1.value, "1");
+
+        let mut compa_decimal1 = CompaDecimal::new();
+        compa_decimal1.increase_by::<u32>(1234);
+        assert_eq!(compa_decimal1.value, "bB");
+
+        let mut compa_decimal1 = CompaDecimal::new();
+        compa_decimal1.increase_by::<u64>(1234567);
+        assert_eq!(compa_decimal1.value, "1r&$");
+
+        let mut compa_decimal1 = CompaDecimal::new();
+        compa_decimal1.increase_by::<u128>(1234556778785);
+        assert_eq!(compa_decimal1.value, "1-Fq}q3");
     }
 }
