@@ -3,7 +3,7 @@ use num_bigint::BigUint;
 use rand::Rng;
 
 fn main() {
-    println!("{}", decimal_to_compa::<u128>(340282366920938463463374607431768211455));
+    println!("{}", decimal_to_compa::<u128>(1234556778785));
     // let size = 100;
     // let n = generated_random_biguint(size);
     // let m = biguint_to_compa(n);

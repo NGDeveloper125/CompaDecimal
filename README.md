@@ -2,16 +2,19 @@
 
 CompaDecimal is a Rust library (crate) that introduces a new decimal system designed to represent large numbers using a compact character set. By combining numbers, letters, and symbols, CompaDecimal allows for high-value numbers to be represented in a smaller number of characters, making it efficient for storage and transmission.
 
-This library is open-source and welcomes contributions, feedback, and suggestions from the community. An extended version of this crate is planned, which will include support for arbitrarily large numbers using BigUint.
+This library is open-source and welcomes contributions, feedback, and suggestions from the community. An extended version of this crate is planned, which will include support for arbitrarily large numbers using `BigUint`.
+
+---
 
 ## Project Goals
 
 The primary goal of CompaDecimal is to create a compact and efficient decimal system that:
+- **Represents large numbers in fewer characters** by utilizing a custom character set.
+- **Supports multiple numeric types**, including unsigned integers (`u8`, `u16`, `u32`, `u64`, `u128`).
+- **Provides conversion utilities** between standard decimal numbers and the CompaDecimal format.
+- **Ensures extensibility** for future support of `BigUint` for arbitrarily large numbers.
 
-- Represents large numbers in fewer characters by utilizing a custom character set.
-- Supports multiple numeric types, including unsigned integers (u8, u16, u32, u64, u128).
-- Provides conversion utilities between standard decimal numbers and the CompaDecimal format.
-- Ensures extensibility for future support of BigUint for arbitrarily large numbers.
+---
 
 ## Features
 
@@ -28,52 +31,47 @@ This character set allows for a base-95 numeral system, enabling compact represe
 
 The library provides the following core functions:
 
-#### `decimal_to_compa<T>(num: T) -> String`
-- Converts a standard decimal number into a CompaDecimal string.
+#### `CompaDecimal::decimal_to_compa<T>(num: T) -> Result<CompaDecimal, CompaDecimalError>`
+- Converts a standard decimal number into a `CompaDecimal` value.
+- Supports unsigned integer types (`u8`, `u16`, `u32`, `u64`, `u128`).
+- **Example**:
+  ```rust
+  let compa = CompaDecimal::decimal_to_compa(123456789u64).unwrap();
+  println!("CompaDecimal: {}", compa.to_string()); // Output: "1LY7VK"
+  ```
+
+ #### `CompaDecimal::to_decimal<T>(&self) -> Result<T, CompaDecimalError>`
+- Converts a CompaDecimal value back into a standard decimal number.
 - Supports unsigned integer types (u8, u16, u32, u64, u128).
-- Example:
-  ```rust
-  let num: u32 = 12345;
-  let compa = decimal_to_compa(num);
-  println!("CompaDecimal: {}", compa);
-  ```
+```rust
+let compa = CompaDecimal::new("1LY7VK".to_string());
+let decimal: u64 = compa.to_decimal().unwrap();
+println!("Decimal: {}", decimal); // Output: 123456789
+```
 
-#### `compa_to_decimal<T>(compa: &str) -> Result<T, CompaDecimalError>`
-- Converts a CompaDecimal string back into a standard decimal number.
+#### `CompaDecimal::increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
+- Increases the CompaDecimal value by a specified amount.
 - Supports unsigned integer types (u8, u16, u32, u64, u128).
-- Example:
-  ```rust
-  let compa = "A1";
-  let decimal: u32 = compa_to_decimal(compa).unwrap();
-  println!("Decimal: {}", decimal);
-  ```
+```rust
+let compa = CompaDecimal::new("1LY7VK".to_string());
+let increased = compa.increase_by(1234u32).unwrap();
+println!("Increased CompaDecimal: {}", increased.to_string());
+```
 
-#### `add_one(current: String) -> Result<String, Error>`
-- Increments a CompaDecimal string by one.
-- Example:
-  ```rust
-  let current = "A1".to_string();
-  let incremented = add_one(current).unwrap();
-  println!("Incremented CompaDecimal: {}", incremented);
-  ```
+#### `CompaDecimal::len(&self) -> usize`
+- Returns the length of the CompaDecimal value.
+```rust
+let compa = CompaDecimal::new("1LY7VK".to_string());
+println!("Length: {}", compa.len()); // Output: 6
+```
+#### `CompaDecimal::add_one(&mut self)`
+- Increments the CompaDecimal value by one.
+```rust
+let mut compa = CompaDecimal::new("A1".to_string());
+compa.add_one();
+println!("Incremented CompaDecimal: {}", compa.to_string());
+```
 
-#### `get_next(current: char) -> Result<char, Error>`
-- Retrieves the next character in the CompaDecimal character set.
-- Example:
-  ```rust
-  let current = 'A';
-  let next = get_next(current).unwrap();
-  println!("Next character: {}", next);
-  ```
-
-### CompaDecimal Struct
-
-A struct that encapsulates a CompaDecimal value and provides methods for conversion and manipulation.
-- Example:
-  ```rust
-  let compa = CompaDecimal::new("A1".to_string());
-  println!("CompaDecimal value: {}", compa.to_string());
-  ```
 
 ## Planned Features
 
@@ -96,37 +94,6 @@ Then, import the crate in your Rust code:
 use compadecimal::*;
 ```
 
-## Examples
-
-### Convert Decimal to CompaDecimal
-```rust
-use compa_decimal::decimal_to_compa;
-
-fn main() {
-    let compa = decimal_to_compa::<u64>(123456789);
-    println!("CompaDecimal: {}", compa); // Output: "1LY7VK"
-}
-```
-
-### Convert CompaDecimal to Decimal
-```rust
-use compa_decimal::compa_to_decimal;
-
-fn main() {
-    let decimal = compa_to_decimal::<u64>("1LY7VK").unwrap();
-    println!("Decimal: {}", decimal); // Output: 123456789
-}
-```
-
-### Increment a CompaDecimal Value
-```rust
-use compa_decimal::add_one;
-
-fn main() {
-    let next = add_one(String::from("1z")).unwrap();
-    println!("Next CompaDecimal: {}", next); // Output: "1!"
-}
-```
 
 ## Contributing
 
