@@ -2,14 +2,12 @@ use std::any::{type_name, type_name_of_val};
 
 use num::{PrimInt, Unsigned};
 
-use crate::decimal_to_compa;
-
 #[derive(Debug)]
-struct CompaDecimalError {
+pub struct CompaDecimalError {
     error_message: String
 }
-struct CompaDecimal {
-    value: String 
+pub struct CompaDecimal {
+    pub value: String 
 }
 
 impl CompaDecimal {

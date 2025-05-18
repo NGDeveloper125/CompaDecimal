@@ -1,9 +1,8 @@
-use compa_decimal::{add_one, biguint_to_compa, decimal_to_compa};
-use num_bigint::BigUint;
-use rand::Rng;
+use compa_decimal::compadecimal::*;
 
 fn main() {
-    println!("{}", decimal_to_compa::<u128>(1234556778785));
+    let compa_decimal = CompaDecimal::decimal_to_compa::<u128>(1234556778785).unwrap();
+    println!("{}", compa_decimal.value)
     // let size = 100;
     // let n = generated_random_biguint(size);
     // let m = biguint_to_compa(n);
@@ -11,15 +10,15 @@ fn main() {
     // println!("a number with a {} digit goes down to {}", size, m_size);
 }                                           
 
-fn generated_random_biguint(digits: usize) -> BigUint {
-    let mut rng = rand::rng();
-    let mut number = String::new();
+// fn generated_random_biguint(digits: usize) -> BigUint {
+//     let mut rng = rand::rng();
+//     let mut number = String::new();
 
-    number.push(rng.random_range(1..10).to_string().chars().next().unwrap());
+//     number.push(rng.random_range(1..10).to_string().chars().next().unwrap());
 
-    for _ in 1..digits {
-        number.push(rng.random_range(1..10).to_string().chars().next().unwrap());
-    }
+//     for _ in 1..digits {
+//         number.push(rng.random_range(1..10).to_string().chars().next().unwrap());
+//     }
 
-    BigUint::parse_bytes(number.as_bytes(), 10).unwrap()
-}
+//     BigUint::parse_bytes(number.as_bytes(), 10).unwrap()
+// }
