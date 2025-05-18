@@ -23,7 +23,7 @@ impl CompaDecimal {
         })
     }
 
-    fn add_one(&mut self) {
+    fn plus_one(&mut self) {
         let mut digits: Vec<char> = self.value.chars().collect();
         let digits_len: usize = digits.len();
 
@@ -117,10 +117,7 @@ impl CompaDecimal {
     where
         T: PrimInt + Unsigned,
     {
-        // Convert the current CompaDecimal value to a u128
         let current_value = self.to_decimal::<u128>()?;
-    
-        // Convert the amount to u128 and add it to the current value
         let amount_as_u128 = T::to_u128(&amount).ok_or_else(|| CompaDecimalError {
             error_message: "Failed to convert the amount to u128".to_string(),
         })?;
@@ -129,8 +126,7 @@ impl CompaDecimal {
             .ok_or_else(|| CompaDecimalError {
                 error_message: "Overflow occurred while adding the amount".to_string(),
             })?;
-    
-        // Convert the new value back to CompaDecimal
+
         CompaDecimal::decimal_to_compa(new_value)
     }
 }
@@ -168,27 +164,27 @@ mod tests {
     #[test]
     fn add_one_test() {
         let mut compa_decimal1 = CompaDecimal::from("0").unwrap();
-        compa_decimal1.add_one();
+        compa_decimal1.plus_one();
         assert_eq!(compa_decimal1.value, "1");
-        compa_decimal1.add_one();
+        compa_decimal1.plus_one();
         assert_eq!(compa_decimal1.value, "2");
         let mut compa_decimal2 = CompaDecimal::from("9").unwrap();
-        compa_decimal2.add_one();
+        compa_decimal2.plus_one();
         assert_eq!(compa_decimal2.value, "A");
         let mut compa_decimal3 = CompaDecimal::from("z").unwrap();
-        compa_decimal3.add_one();
+        compa_decimal3.plus_one();
         assert_eq!(compa_decimal3.value, "!");
         let mut compa_decimal4 = CompaDecimal::from("10").unwrap();
-        compa_decimal4.add_one();
+        compa_decimal4.plus_one();
         assert_eq!(compa_decimal4.value, "11");
         let mut compa_decimal5 = CompaDecimal::from("19").unwrap();
-        compa_decimal5.add_one();
+        compa_decimal5.plus_one();
         assert_eq!(compa_decimal5.value, "1A");
         let mut compa_decimal6 = CompaDecimal::from("1z").unwrap();
-        compa_decimal6.add_one();
+        compa_decimal6.plus_one();
         assert_eq!(compa_decimal6.value, "1!");
         let mut compa_decimal7 = CompaDecimal::from("1~").unwrap();
-        compa_decimal7.add_one();
+        compa_decimal7.plus_one();
         assert_eq!(compa_decimal7.value, "20");
     }
 
