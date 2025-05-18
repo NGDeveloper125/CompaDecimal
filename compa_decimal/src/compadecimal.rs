@@ -55,7 +55,52 @@ impl CompaDecimal {
     }
 
     fn minus_one(&mut self) -> Result<CompaDecimal, CompaDecimalError> {
+        let mut digits: Vec<char> = self.value.chars().collect();
+        let digits_len: usize = digits.len();
 
+
+        if self.value.len() == 1 {
+            let updated_value = get_previous(&digits[0]);
+            match updated_value {
+                Some(value) => return Ok(
+                    CompaDecimal { 
+                        value: value.to_string() 
+                    }),
+                None => return Err(
+                    CompaDecimalError 
+                    { error_message: "Error! Value can not be less than 0".to_string() 
+                })
+            }
+        }
+
+        let updated_value = get_previous(&digits[digits_len - 1]);
+
+        match updated_value {
+            Some(value) => {
+                digits[digits_len - 1] = value;
+                return Ok(CompaDecimal {
+                    value: digits.into_iter().collect::<String>()});
+            },
+            None => {
+                _ = {
+                    if digits[digits_len - 2] == '1' {
+                        digits.remove(digits_len - 1);
+                        digits[digits_len - 2] = '~';
+                        return Ok(CompaDecimal { value: digits.into_iter().collect::<String>() })
+                    }
+                    digits[digits_len - 1] = '~';
+                    digits[digits_len - 2] = match get_previous(&digits[digits_len - 2]) {
+                        Some(value) => value,
+                        None => return Err(CompaDecimalError { error_message: "Fatal error! second value before end of sequence was 0 or invalid".to_string() })
+                    };
+                }
+            }
+        }
+    
+
+        Ok(CompaDecimal {
+            value: digits.into_iter().collect::<String>()
+        })
     }
 
     pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
@@ -222,9 +267,9 @@ mod tests {
         let mut compa_decimal2 = CompaDecimal::from("A").unwrap();
         let compa_decimal2 = compa_decimal2.minus_one().unwrap();
         assert_eq!(compa_decimal2.value, "9");
-        let mut compa_decimal3 = CompaDecimal::from("z").unwrap();
+        let mut compa_decimal3 = CompaDecimal::from("!").unwrap();
         let compa_decimal3 = compa_decimal3.minus_one().unwrap();
-        assert_eq!(compa_decimal3.value, "!");
+        assert_eq!(compa_decimal3.value, "z");
         let mut compa_decimal4 = CompaDecimal::from("11").unwrap();
         let compa_decimal4 = compa_decimal4.minus_one().unwrap();
         assert_eq!(compa_decimal4.value, "10");
@@ -233,10 +278,13 @@ mod tests {
         assert_eq!(compa_decimal5.value, "19");
         let mut compa_decimal6 = CompaDecimal::from("1z").unwrap();
         let compa_decimal6 = compa_decimal6.minus_one().unwrap();
-        assert_eq!(compa_decimal6.value, "1!");
+        assert_eq!(compa_decimal6.value, "1Z");
         let mut compa_decimal7 = CompaDecimal::from("20").unwrap();
         let compa_decimal7 = compa_decimal7.minus_one().unwrap();
         assert_eq!(compa_decimal7.value, "1~");
+        let mut compa_decimal7 = CompaDecimal::from("10").unwrap();
+        let compa_decimal7 = compa_decimal7.minus_one().unwrap();
+        assert_eq!(compa_decimal7.value, "~");
     }
 
     #[test]
