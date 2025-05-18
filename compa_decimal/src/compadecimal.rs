@@ -153,6 +153,20 @@ fn get_next(current: &char) -> char {
     digits[index + 1]
 }
 
+fn get_previous(current: &char) -> Option<char> {
+    let digits: Vec<char> = get_compa_digits();
+    let index = match digits.iter().position(|digit| digit == current) {
+        Some(index) => index,
+        None => return None
+    };
+
+    if index == 0 {
+        return None
+    }
+
+    Some(digits[index - 1])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -167,10 +181,10 @@ mod tests {
 
     #[test]
     fn get_previous_test() {
-        assert_eq!(get_previous(&'1'), '0');
-        assert_eq!(get_previous(&'A'), '9');
-        assert_eq!(get_previous(&'a'), 'A');
-        assert_eq!(get_previous(&'0'), '~');
+        assert_eq!(get_previous(&'1'), Some('0'));
+        assert_eq!(get_previous(&'A'), Some('9'));
+        assert_eq!(get_previous(&'a'), Some('A'));
+        assert_eq!(get_previous(&'0'), None);
     }
 
     #[test]
