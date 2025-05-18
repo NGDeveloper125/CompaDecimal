@@ -54,6 +54,10 @@ impl CompaDecimal {
             
     }
 
+    fn minus_one(&mut self) -> Result<CompaDecimal, CompaDecimalError> {
+
+    }
+
     pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
     where T: PrimInt + Unsigned {
         let compa_digits = get_compa_digits();
@@ -159,6 +163,14 @@ mod tests {
         assert_eq!(get_next(&'9'), 'A');
         assert_eq!(get_next(&'A'), 'a');
         assert_eq!(get_next(&'~'), '0');
+    }
+
+    #[test]
+    fn get_previous_test() {
+        assert_eq!(get_previous(&'1'), '0');
+        assert_eq!(get_previous(&'A'), '9');
+        assert_eq!(get_previous(&'a'), 'A');
+        assert_eq!(get_previous(&'0'), '~');
     }
 
     #[test]
