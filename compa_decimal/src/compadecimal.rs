@@ -1,4 +1,4 @@
-use std::any::{type_name, type_name_of_val};
+use std::{any::{type_name, type_name_of_val}, ops::Sub};
 
 use num::{PrimInt, Unsigned};
 
@@ -177,6 +177,19 @@ impl CompaDecimal {
             })?;
 
         CompaDecimal::decimal_to_compa(new_value)
+    }
+
+    pub fn decrease_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>
+    where 
+        T: PrimInt + Unsigned,
+    {
+        let current_value = self.to_decimal::<u128>()?;
+        let amount_as_u128 = T::to_u128(&amount).ok_or_else(|| CompaDecimalError {
+            error_message: "Failed to convert the amount to u128".to_string(),
+        })?;
+
+        let new_value = current_value.sub(amount_as_u128);
+        CompaDecimal::decimal_to_compa::<u128>(new_value)
     }
 }
 
