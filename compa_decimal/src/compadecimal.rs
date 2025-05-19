@@ -340,4 +340,23 @@ mod tests {
         compa_decimal4 = compa_decimal4.increase_by::<u128>(1234556778785).unwrap();
         assert_eq!(compa_decimal4.value, "1-Fq}q3");
     }
+
+    #[test]
+    fn decrease_by_test() {
+        let mut compa_decimal1 = CompaDecimal::from("1").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u8>(1).unwrap();
+        assert_eq!(compa_decimal1.value, "0");
+
+        let mut compa_decimal1 = CompaDecimal::from("bB").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u32>(1234).unwrap();
+        assert_eq!(compa_decimal1.value, "0");
+
+        let mut compa_decimal1 = CompaDecimal::from("1r&$").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u64>(1234567).unwrap();
+        assert_eq!(compa_decimal1.value, "0");
+
+        let mut compa_decimal1 = CompaDecimal::from("1-Fq}q3").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u128>(1234556778785).unwrap();
+        assert_eq!(compa_decimal1.value, "0");
+    }
 }
