@@ -34,27 +34,27 @@ The library provides the following core functions:
 #### `CompaDecimal::new() -> CompaDecimal`
 - Creates a `CompaDecimal` object with the value set to `String::from("0")`.
 - **Example**:
-  ```rust
-  let compa = CompaDecimal::new();
-  assert_eq(compa.value, "0".to_string());
-  ```
+```rust
+let compa = CompaDecimal::new();
+assert_eq(compa.value, "0".to_string());
+```
 
 #### `CompaDecimal::from(value: &str) -> Result<CompaDecimal, CompaDecimalError>`
 - Attempting to create a `CompaDecimal` object with the value set to the `value` parameter.
 - **Example**:
-  ```rust
-  let compa = CompaDecimal::from("123asd").unwrap();
-  assert_eq(compa.value, "123asd".to_string());
-  ```
+```rust
+let compa = CompaDecimal::from("123asd").unwrap();
+assert_eq(compa.value, "123asd".to_string());
+```
 
 #### `CompaDecimal::decimal_to_compa<T>(num: T) -> Result<CompaDecimal, CompaDecimalError>`
 - Attempting to converts a standard decimal number into a `CompaDecimal` value.
 - Supports unsigned integer types (`u8`, `u16`, `u32`, `u64`, `u128`).
 - **Example**:
-  ```rust
-  let compa = CompaDecimal::decimal_to_compa:<u64>:(123456789).unwrap();
-  assert_eq(compa.value, "1LY7VK".to_string());
-  ```
+```rust
+let compa = CompaDecimal::decimal_to_compa:<u64>:(123456789).unwrap();
+assert_eq(compa.value, "1LY7VK".to_string());
+```
 
 #### `plus_one(&mut self)`
 - Increments the CompaDecimal value by one.
@@ -64,22 +64,38 @@ compa.plus_one();
 assert_eq(compa.value, "A2");
 ```
 
- #### `to_decimal<T>(&self) -> Result<T, CompaDecimalError>`
-- Converts a CompaDecimal value back into a standard decimal number.
-- Supports unsigned integer types (u8, u16, u32, u64, u128).
+#### `minus_one(&self)`
+- Attempts to decrease the CompaDecimal value by one.
 ```rust
-let compa = CompaDecimal::new("1LY7VK".to_string());
-let decimal: u64 = compa.to_decimal().unwrap();
-println!("Decimal: {}", decimal); // Output: 123456789
+let compa = CompaDecimal::from("A1").unwrap();
+let decreased = compa.minus_one().unwrap();
+assert_eq(compa.value, "A");
 ```
 
 #### `increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
-- Increases the CompaDecimal value by a specified amount.
+- Attempts to increases the CompaDecimal value by a specified amount.
 - Supports unsigned integer types (u8, u16, u32, u64, u128).
 ```rust
 let compa = CompaDecimal::from("1LY7VK").unwrap();
 let increased = compa.increase_by::<u32>(1234).unwrap();
-println!(increased.value, "1LY7$Q");
+assert_eq(increased.value, "1LY7$Q");
+```
+
+#### `decrease_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
+- Attempts to decreases the CompaDecimal value by a specified amount.
+- Supports unsigned integer types (u8, u16, u32, u64, u128).
+```rust
+let compa = CompaDecimal::from("1LY7VK").unwrap();
+let decreased = compa.decrease_by::<u32>(1234).unwrap();
+assert_eq(increased.value, "1LY7oE");
+```
+
+#### `add(&self, additional_value: &str) -> CompaDecimal`
+- Add the additional value to the CompaDecimal value.
+```rust
+let compa = CompaDecimal::from("ASr35").unwrap();
+let new_compa = compa.add("as1Ad4");
+assert_eq(new_compa.value, "axswF9");
 ```
 
 #### `len(&self) -> usize`
@@ -89,16 +105,14 @@ let compa = CompaDecimal::from("1LY7VK").unwrap();
 assert_eq(compa.len(), 6);
 ```
 
-
-
-#### `add(&self, additional_value: &str) -> CompaDecimal`
-- Add the additional value to the CompaDecimal value.
+#### `to_decimal<T>(&self) -> Result<T, CompaDecimalError>`
+- Attempts to converts a CompaDecimal value back into a standard decimal number.
+- Supports unsigned integer types (u8, u16, u32, u64, u128).
 ```rust
-let compa = CompaDecimal::new();
-let new_compa = compa.add("as1Ad4");
-assert_eq(new_compa.value, "as1Ad4");
+let compa = CompaDecimal::new("1LY7VK".to_string());
+let decimal = compa.to_decimal::<u64>().unwrap();
+assert_eq(123456789, decimal);
 ```
-
 
 ## Planned Features
 

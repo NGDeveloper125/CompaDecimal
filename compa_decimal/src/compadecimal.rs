@@ -23,7 +23,7 @@ impl CompaDecimal {
         })
     }
 
-    fn plus_one(&mut self) {
+    pub fn plus_one(&mut self) {
         let mut digits: Vec<char> = self.value.chars().collect();
         let digits_len: usize = digits.len();
 
@@ -54,7 +54,7 @@ impl CompaDecimal {
             
     }
 
-    fn minus_one(&mut self) -> Result<CompaDecimal, CompaDecimalError> {
+    pub fn minus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
         let mut digits: Vec<char> = self.value.chars().collect();
         let digits_len: usize = digits.len();
 
