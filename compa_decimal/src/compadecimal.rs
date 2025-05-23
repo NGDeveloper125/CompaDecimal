@@ -191,6 +191,36 @@ impl CompaDecimal {
         let new_value = current_value.sub(amount_as_u128);
         CompaDecimal::decimal_to_compa::<u128>(new_value)
     }
+
+    pub fn add(&self, additional_value: &str) -> CompaDecimal {
+        let compa_digits = get_compa_digits();
+        let base = compa_digits.len();
+
+        let mut a: Vec<char> = self.value.chars().collect();
+        let mut b: Vec<char> = additional_value.chars().collect();
+
+        // Pad the shorter number with '0's at the front
+        while a.len() < b.len() { a.insert(0, '0'); }
+        while b.len() < a.len() { b.insert(0, '0'); }
+
+        let mut carry = 0;
+        let mut result = Vec::with_capacity(a.len() + 1);
+
+        for i in (0..a.len()).rev() {
+            let ai = compa_digits.iter().position(|&x| x == a[i]).unwrap();
+            let bi = compa_digits.iter().position(|&x| x == b[i]).unwrap();
+            let sum = ai + bi + carry;
+            result.push(compa_digits[sum % base]);
+            carry = sum / base;
+        }
+
+        if carry > 0 {
+            result.push(compa_digits[carry]);
+        }
+
+        result.reverse();
+        CompaDecimal { value: result.into_iter().collect() }
+    }
 }
 
 fn get_compa_digits() -> Vec<char> {
