@@ -199,7 +199,6 @@ impl CompaDecimal {
         let mut a: Vec<char> = self.value.chars().collect();
         let mut b: Vec<char> = additional_value.chars().collect();
 
-        // Pad the shorter number with '0's at the front
         while a.len() < b.len() { a.insert(0, '0'); }
         while b.len() < a.len() { b.insert(0, '0'); }
 

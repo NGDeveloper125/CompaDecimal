@@ -8,9 +8,10 @@ fn main() {
     // let compa_decimal1 = CompaDecimal::from("AsdgrW11").unwrap();
     // let result = compa_decimal1.to_decimal::<u128>().unwrap();
     
-    let compa_decimal1 = CompaDecimal::decimal_to_compa::<u128>(681028938712386).unwrap();
-
-    println!("{}", compa_decimal1.value)
+    //let compa_decimal1 = CompaDecimal::decimal_to_compa::<u128>(681028938712386).unwrap();
+    let compa = CompaDecimal::from("1LY7VK").unwrap();
+    let increased = compa.increase_by::<u32>(1234).unwrap();
+    println!("{}", increased.value)
     // let size = 100;
     // let n = generated_random_biguint(size);
     // let m = biguint_to_compa(n);
