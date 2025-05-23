@@ -48,13 +48,21 @@ The library provides the following core functions:
   ```
 
 #### `CompaDecimal::decimal_to_compa<T>(num: T) -> Result<CompaDecimal, CompaDecimalError>`
-- Converts a standard decimal number into a `CompaDecimal` value.
+- Attempting to converts a standard decimal number into a `CompaDecimal` value.
 - Supports unsigned integer types (`u8`, `u16`, `u32`, `u64`, `u128`).
 - **Example**:
   ```rust
-  let compa = CompaDecimal::decimal_to_compa(123456789u64).unwrap();
-  println!("CompaDecimal: {}", compa.to_string()); // Output: "1LY7VK"
+  let compa = CompaDecimal::decimal_to_compa:<u64>:(123456789).unwrap();
+  assert_eq(compa.value, "1LY7VK".to_string());
   ```
+
+#### `plus_one(&mut self)`
+- Increments the CompaDecimal value by one.
+```rust
+let mut compa = CompaDecimal::from("A1").unwrap();
+compa.plus_one();
+assert_eq(compa.value, "A2");
+```
 
  #### `to_decimal<T>(&self) -> Result<T, CompaDecimalError>`
 - Converts a CompaDecimal value back into a standard decimal number.
@@ -81,13 +89,7 @@ let compa = CompaDecimal::from("1LY7VK").unwrap();
 assert_eq(compa.len(), 6);
 ```
 
-#### `add_one(&mut self)`
-- Increments the CompaDecimal value by one.
-```rust
-let mut compa = CompaDecimal::new("A1".to_string());
-compa.plus_one();
-assert_eq(compa.value, "A2");
-```
+
 
 #### `add(&self, additional_value: &str) -> CompaDecimal`
 - Add the additional value to the CompaDecimal value.
