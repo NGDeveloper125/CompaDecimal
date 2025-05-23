@@ -17,7 +17,7 @@ impl CompaDecimal {
         }
     }
 
-    fn from(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
+    pub fn from(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
         Ok(CompaDecimal { 
             value: value.to_string() 
         })
@@ -372,4 +372,24 @@ mod tests {
         compa_decimal1 = compa_decimal1.decrease_by::<u128>(1234556778785).unwrap();
         assert_eq!(compa_decimal1.value, "0");
     }
+
+    #[test]
+    fn Add_test() {
+        let compa_decimal1 = CompaDecimal::new();
+        let compa_decimal1 = compa_decimal1.add("1");
+        assert_eq!(compa_decimal1.value, "1");
+
+        let compa_decimal1 = CompaDecimal::new();
+        let compa_decimal1 = compa_decimal1.add("1AWS");
+        assert_eq!(compa_decimal1.value, "1AWS");
+
+        let compa_decimal1 = CompaDecimal::from("1").unwrap();
+        let compa_decimal1 = compa_decimal1.add("1");
+        assert_eq!(compa_decimal1.value, "2");
+    
+    
+        let compa_decimal1 = CompaDecimal::from("aAswf").unwrap();
+        let compa_decimal1 = compa_decimal1.add("AsdgrW11");
+        assert_eq!(compa_decimal1.value, "AsdMX7XG");
+        }
 }
