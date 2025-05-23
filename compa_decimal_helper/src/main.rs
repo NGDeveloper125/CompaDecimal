@@ -1,8 +1,17 @@
 use compa_decimal::compadecimal::*;
 
 fn main() {
-    let compa_decimal = CompaDecimal::decimal_to_compa::<u128>(1234556778785).unwrap();
-    println!("{}", compa_decimal.value)
+    // let i = 867550179;
+    // let b: u128 = 681028071162207;
+    // let result = i + b;
+
+    // let compa_decimal1 = CompaDecimal::from("AsdgrW11").unwrap();
+    // let result = compa_decimal1.to_decimal::<u128>().unwrap();
+    
+    //let compa_decimal1 = CompaDecimal::decimal_to_compa::<u128>(681028938712386).unwrap();
+    let compa = CompaDecimal::from("1LY7VK").unwrap();
+    let increased = compa.increase_by::<u32>(1234).unwrap();
+    println!("{}", increased.value)
     // let size = 100;
     // let n = generated_random_biguint(size);
     // let m = biguint_to_compa(n);
@@ -20,5 +29,5 @@ fn main() {
 //         number.push(rng.random_range(1..10).to_string().chars().next().unwrap());
 //     }
 
-//     BigUint::parse_bytes(number.as_bytes(), 10).unwrap()
+//     BigUint::parse_bytes(number.as_bytes(), 10).unwrap() 867550179 + 681028071162207
 // }

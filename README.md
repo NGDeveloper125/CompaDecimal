@@ -40,7 +40,7 @@ The library provides the following core functions:
   println!("CompaDecimal: {}", compa.to_string()); // Output: "1LY7VK"
   ```
 
- #### `CompaDecimal::to_decimal<T>(&self) -> Result<T, CompaDecimalError>`
+ #### `to_decimal<T>(&self) -> Result<T, CompaDecimalError>`
 - Converts a CompaDecimal value back into a standard decimal number.
 - Supports unsigned integer types (u8, u16, u32, u64, u128).
 ```rust
@@ -49,27 +49,36 @@ let decimal: u64 = compa.to_decimal().unwrap();
 println!("Decimal: {}", decimal); // Output: 123456789
 ```
 
-#### `CompaDecimal::increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
+#### `increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
 - Increases the CompaDecimal value by a specified amount.
 - Supports unsigned integer types (u8, u16, u32, u64, u128).
 ```rust
-let compa = CompaDecimal::new("1LY7VK".to_string());
-let increased = compa.increase_by(1234u32).unwrap();
-println!("Increased CompaDecimal: {}", increased.to_string());
+let compa = CompaDecimal::from("1LY7VK").unwrap();
+let increased = compa.increase_by::<u32>(1234).unwrap();
+println!(increased.value, "1LY7$Q");
 ```
 
-#### `CompaDecimal::len(&self) -> usize`
+#### `len(&self) -> usize`
 - Returns the length of the CompaDecimal value.
 ```rust
-let compa = CompaDecimal::new("1LY7VK".to_string());
-println!("Length: {}", compa.len()); // Output: 6
+let compa = CompaDecimal::from("1LY7VK").unwrap();
+assert_eq(compa.len(), 6);
 ```
-#### `CompaDecimal::add_one(&mut self)`
+
+#### `add_one(&mut self)`
 - Increments the CompaDecimal value by one.
 ```rust
 let mut compa = CompaDecimal::new("A1".to_string());
-compa.add_one();
-println!("Incremented CompaDecimal: {}", compa.to_string());
+compa.plus_one();
+assert_eq(compa.value, "A2");
+```
+
+#### `add(&self, additional_value: &str) -> CompaDecimal`
+- Add the additional value to the CompaDecimal value.
+```rust
+let compa = CompaDecimal::new();
+let new_compa = compa.add("as1Ad4");
+assert_eq(new_compa.value, "as1Ad4");
 ```
 
 

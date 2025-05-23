@@ -17,7 +17,7 @@ impl CompaDecimal {
         }
     }
 
-    fn from(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
+    pub fn from(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
         Ok(CompaDecimal { 
             value: value.to_string() 
         })
@@ -190,6 +190,35 @@ impl CompaDecimal {
 
         let new_value = current_value.sub(amount_as_u128);
         CompaDecimal::decimal_to_compa::<u128>(new_value)
+    }
+
+    pub fn add(&self, additional_value: &str) -> CompaDecimal {
+        let compa_digits = get_compa_digits();
+        let base = compa_digits.len();
+
+        let mut a: Vec<char> = self.value.chars().collect();
+        let mut b: Vec<char> = additional_value.chars().collect();
+
+        while a.len() < b.len() { a.insert(0, '0'); }
+        while b.len() < a.len() { b.insert(0, '0'); }
+
+        let mut carry = 0;
+        let mut result = Vec::with_capacity(a.len() + 1);
+
+        for i in (0..a.len()).rev() {
+            let ai = compa_digits.iter().position(|&x| x == a[i]).unwrap();
+            let bi = compa_digits.iter().position(|&x| x == b[i]).unwrap();
+            let sum = ai + bi + carry;
+            result.push(compa_digits[sum % base]);
+            carry = sum / base;
+        }
+
+        if carry > 0 {
+            result.push(compa_digits[carry]);
+        }
+
+        result.reverse();
+        CompaDecimal { value: result.into_iter().collect() }
     }
 }
 
@@ -372,4 +401,24 @@ mod tests {
         compa_decimal1 = compa_decimal1.decrease_by::<u128>(1234556778785).unwrap();
         assert_eq!(compa_decimal1.value, "0");
     }
+
+    #[test]
+    fn Add_test() {
+        let compa_decimal1 = CompaDecimal::new();
+        let compa_decimal1 = compa_decimal1.add("1");
+        assert_eq!(compa_decimal1.value, "1");
+
+        let compa_decimal1 = CompaDecimal::new();
+        let compa_decimal1 = compa_decimal1.add("1AWS");
+        assert_eq!(compa_decimal1.value, "1AWS");
+
+        let compa_decimal1 = CompaDecimal::from("1").unwrap();
+        let compa_decimal1 = compa_decimal1.add("1");
+        assert_eq!(compa_decimal1.value, "2");
+    
+    
+        let compa_decimal1 = CompaDecimal::from("aAswf").unwrap();
+        let compa_decimal1 = compa_decimal1.add("AsdgrW11");
+        assert_eq!(compa_decimal1.value, "AsdMX7XG");
+        }
 }
