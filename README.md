@@ -31,6 +31,22 @@ This character set allows for a base-95 numeral system, enabling compact represe
 
 The library provides the following core functions:
 
+#### `CompaDecimal::new() -> CompaDecimal`
+- Creates a `CompaDecimal` object with the value set to `String::from("0")`.
+- **Example**:
+  ```rust
+  let compa = CompaDecimal::new();
+  assert_eq(compa.value, "0".to_string());
+  ```
+
+#### `CompaDecimal::from(value: &str) -> Result<CompaDecimal, CompaDecimalError>`
+- Attempting to create a `CompaDecimal` object with the value set to the `value` parameter.
+- **Example**:
+  ```rust
+  let compa = CompaDecimal::from("123asd").unwrap();
+  assert_eq(compa.value, "123asd".to_string());
+  ```
+
 #### `CompaDecimal::decimal_to_compa<T>(num: T) -> Result<CompaDecimal, CompaDecimalError>`
 - Converts a standard decimal number into a `CompaDecimal` value.
 - Supports unsigned integer types (`u8`, `u16`, `u32`, `u64`, `u128`).
