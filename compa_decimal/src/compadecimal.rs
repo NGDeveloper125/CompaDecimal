@@ -18,6 +18,11 @@ impl CompaDecimal {
     }
 
     pub fn from_str(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
+        if valid_str(value) {
+            return Err(CompaDecimalError {
+                error_message: "All chars have to be valid compa digits".to_string()
+            })
+        }
         Ok(CompaDecimal { 
             value: value.to_string() 
         })
