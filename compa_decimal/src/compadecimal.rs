@@ -279,6 +279,10 @@ fn get_compa_digits() -> Vec<char> {
     "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect()
 }
 
+fn valid_str(string: &str) -> bool {
+    string.chars().all(|ch| get_compa_digits().contains(&ch))
+}
+
 fn get_next(current: &char) -> char {
     let digits: Vec<char> = get_compa_digits();
     let index = match digits.iter().position(|digit| digit == current) {
@@ -511,5 +515,14 @@ mod tests {
 
         let compa_decimal1 = CompaDecimal::from("1").unwrap();
         assert_eq!(compa_decimal1.cmp("0"), Ordering::Greater);
+    }
+
+    #[test]
+    fn valid_str_test() {
+        assert!(valid_str("abc"));
+        assert!(valid_str("ABC"));
+        assert!(valid_str("123"));
+        assert!(!valid_str("£"));
+        assert!(!valid_str("¬")); 
     }
 }
