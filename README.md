@@ -61,7 +61,7 @@ assert_eq(compa.value, "1LY7VK".to_string());
 ```rust
 let mut compa = CompaDecimal::from("A1").unwrap();
 compa.plus_one();
-assert_eq(compa.value, "A2");
+assert_eq(compa.value, "A2".to_string());
 ```
 
 #### `minus_one(&self)`
@@ -69,7 +69,7 @@ assert_eq(compa.value, "A2");
 ```rust
 let compa = CompaDecimal::from("A1").unwrap();
 let decreased = compa.minus_one().unwrap();
-assert_eq(compa.value, "A");
+assert_eq(compa.value, "A".to_string());
 ```
 
 #### `increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
@@ -78,7 +78,7 @@ assert_eq(compa.value, "A");
 ```rust
 let compa = CompaDecimal::from("1LY7VK").unwrap();
 let increased = compa.increase_by::<u32>(1234).unwrap();
-assert_eq(increased.value, "1LY7$Q");
+assert_eq(increased.value, "1LY7$Q".to_string());
 ```
 
 #### `decrease_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
@@ -87,7 +87,7 @@ assert_eq(increased.value, "1LY7$Q");
 ```rust
 let compa = CompaDecimal::from("1LY7VK").unwrap();
 let decreased = compa.decrease_by::<u32>(1234).unwrap();
-assert_eq(increased.value, "1LY7oE");
+assert_eq(increased.value, "1LY7oE".to_string());
 ```
 
 #### `add(&self, additional_value: &str) -> CompaDecimal`
@@ -95,7 +95,24 @@ assert_eq(increased.value, "1LY7oE");
 ```rust
 let compa = CompaDecimal::from("ASr35").unwrap();
 let new_compa = compa.add("as1Ad4");
-assert_eq(new_compa.value, "axswF9");
+assert_eq(new_compa.value, "axswF9".to_string());
+```
+
+#### `subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError>`
+- Attempts to subract the subtrahend value from the CompaDecimal value.
+- Returns an error if the subtrahend is bigger than the CompaDecimal value.
+```rust
+let compa = CompaDecimal::from("axswF9").unwrap();
+let new_compa = compa.subtract("as1Ad4").unwrap();
+assert_eq(new_compa.value, "ASr35".to_string());
+```
+
+#### `cmp(&self, comparand: &str) -> std::cmp::Ordering`
+- Compare the comparand value to the CompaDecimal value.
+- Returns an Ordering object.
+```rust
+let compa = CompaDecimal::from("axswF9").unwrap();
+assert_eq(compa.cmp("axswF8"), Ordering::Less);
 ```
 
 #### `len(&self) -> usize`
