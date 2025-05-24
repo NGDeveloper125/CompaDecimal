@@ -239,9 +239,13 @@ impl CompaDecimal {
         }
         let compa_digits = get_compa_digits();
         let base = compa_digits.len();
-
-        if self.cmp(subtrahend) == std::cmp::Ordering::Less {
-            return Err(CompaDecimalError { error_message: "Result would be negative".to_string() });
+        match self.cmp(subtrahend) {
+            Ok(cmp_result) => {
+                if cmp_result == std::cmp::Ordering::Less {
+                    return Err(CompaDecimalError { error_message: "Result would be negative".to_string() });
+                }
+            },
+            Err(error) => return Err(error)
         }
 
         let mut a: Vec<char> = self.value.chars().collect();

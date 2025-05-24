@@ -12,7 +12,7 @@ fn main() {
     // let compa = CompaDecimal::from("1LY7VK").unwrap();
     // let increased = compa.increase_by::<u32>(1234).unwrap();
     let compa = CompaDecimal::from_str("ASr35").unwrap();
-    let new_compa = compa.add("as1Ad4");
+    let new_compa = compa.add("as1Ad4").unwrap();
     println!("{}", new_compa.value)
     // let size = 100;
     // let n = generated_random_biguint(size);
