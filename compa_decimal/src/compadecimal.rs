@@ -256,6 +256,8 @@ fn get_previous(current: &char) -> Option<char> {
 
 #[cfg(test)]
 mod tests {
+    use std::cmp::Ordering;
+
     use super::*;
 
     #[test]
@@ -420,5 +422,40 @@ mod tests {
         let compa_decimal1 = CompaDecimal::from("aAswf").unwrap();
         let compa_decimal1 = compa_decimal1.add("AsdgrW11");
         assert_eq!(compa_decimal1.value, "AsdMX7XG");
-        }
+    }
+
+    fn subtract_test() {
+        let compa_decimal1 = CompaDecimal::from("1").unwrap();
+        let compa_decimal1 = compa_decimal1.subtract("1").unwrap();
+        assert_eq!(compa_decimal1.value, "0");
+
+        let compa_decimal1 = CompaDecimal::from("1AWS").unwrap();
+        let compa_decimal1 = compa_decimal1.subtract("1AWS").unwrap();
+        assert_eq!(compa_decimal1.value, "0");
+
+        let compa_decimal1 = CompaDecimal::from("2").unwrap();
+        let compa_decimal1 = compa_decimal1.subtract("1").unwrap();
+        assert_eq!(compa_decimal1.value, "1");
+    
+    
+        let compa_decimal1 = CompaDecimal::from("AsdMX7XG").unwrap();
+        let compa_decimal1 = compa_decimal1.subtract("AsdgrW11").unwrap();
+        assert_eq!(compa_decimal1.value, "aAswf");
+
+        let compa_decimal1 = CompaDecimal::from("1").unwrap();
+        let compa_decimal1 = compa_decimal1.subtract("2");
+        assert!(compa_decimal1, CompaDecimalError);
+    }
+
+    fn cmp_test() {
+        let compa_decimal1 = CompaDecimal::from("1").unwrap();
+        assert_eq!(compa_decimal1.cmp("2"), Ordering::Less);
+
+        let compa_decimal1 = CompaDecimal::from("1").unwrap();
+        assert_eq!(compa_decimal1.cmp("1"), Ordering::Equal);
+
+        let compa_decimal1 = CompaDecimal::from("1").unwrap();
+        assert_eq!(compa_decimal1.cmp("0"), Ordering::Greater);
+
+    }
 }
