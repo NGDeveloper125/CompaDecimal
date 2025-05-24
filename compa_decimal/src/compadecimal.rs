@@ -18,7 +18,7 @@ impl CompaDecimal {
     }
 
     pub fn from_str(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
-        if valid_str(value) {
+        if !valid_str(value) {
             return Err(CompaDecimalError {
                 error_message: "All chars have to be valid compa digits".to_string()
             })
@@ -198,7 +198,7 @@ impl CompaDecimal {
     }
 
     pub fn add(&self, additional_value: &str) -> Result<CompaDecimal, CompaDecimalError> {
-        if valid_str(additional_value) {
+        if !valid_str(additional_value) {
             return Err(CompaDecimalError {
                 error_message: "All chars have to be valid compa digits".to_string()
             })
@@ -232,7 +232,7 @@ impl CompaDecimal {
     }
 
     pub fn subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError> {
-        if valid_str(subtrahend) {
+        if !valid_str(subtrahend) {
             return Err(CompaDecimalError {
                 error_message: "All chars have to be valid compa digits".to_string()
             })
@@ -279,7 +279,7 @@ impl CompaDecimal {
     }
 
     pub fn cmp(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError> {
-        if valid_str(comparand) {
+        if !valid_str(comparand) {
             return Err(CompaDecimalError {
                 error_message: "All chars have to be valid compa digits".to_string()
             })
