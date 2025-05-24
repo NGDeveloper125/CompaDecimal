@@ -232,6 +232,11 @@ impl CompaDecimal {
     }
 
     pub fn subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError> {
+        if valid_str(subtrahend) {
+            return Err(CompaDecimalError {
+                error_message: "All chars have to be valid compa digits".to_string()
+            })
+        }
         let compa_digits = get_compa_digits();
         let base = compa_digits.len();
 
