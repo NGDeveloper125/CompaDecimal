@@ -1,10 +1,10 @@
-use std::{any::{type_name, type_name_of_val}, ops::Sub};
+use std::{any::{type_name_of_val}, ops::Sub};
 
 use num::{PrimInt, Unsigned};
 
 #[derive(Debug)]
 pub struct CompaDecimalError {
-    error_message: String
+    pub error_message: String
 }
 pub struct CompaDecimal {
     pub value: String 
@@ -221,6 +221,44 @@ impl CompaDecimal {
         CompaDecimal { value: result.into_iter().collect() }
     }
 
+    pub fn subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError> {
+        let compa_digits = get_compa_digits();
+        let base = compa_digits.len();
+
+        if self.cmp(subtrahend) == std::cmp::Ordering::Less {
+            return Err(CompaDecimalError { error_message: "Result would be negative".to_string() });
+        }
+
+        let mut a: Vec<char> = self.value.chars().collect();
+        let mut b: Vec<char> = subtrahend.chars().collect();
+
+        while a.len() < b.len() { a.insert(0, '0'); }
+        while b.len() < a.len() { b.insert(0, '0'); }
+
+        let mut result = Vec::with_capacity(a.len());
+        let mut borrow = 0;
+
+        for i in (0..a.len()).rev() {
+            let ai = compa_digits.iter().position(|&x| x == a[i]).unwrap() as isize;
+            let bi = compa_digits.iter().position(|&x| x == b[i]).unwrap() as isize;
+            let mut diff = ai - bi - borrow;
+            if diff < 0 {
+                diff += base as isize;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            result.push(compa_digits[diff as usize]);
+        }
+
+        while result.len() > 1 && result.last() == Some(&'0') {
+            result.pop();
+        }
+
+        result.reverse();
+        Ok(CompaDecimal { value: result.into_iter().collect() })
+    }
+
     pub fn cmp(&self, b: &str) -> std::cmp::Ordering {
         let compa_digits = get_compa_digits();
         if self.value.len() != b.len() {
@@ -420,7 +458,7 @@ mod tests {
     }
 
     #[test]
-    fn Add_test() {
+    fn add_test() {
         let compa_decimal1 = CompaDecimal::new();
         let compa_decimal1 = compa_decimal1.add("1");
         assert_eq!(compa_decimal1.value, "1");
@@ -439,6 +477,7 @@ mod tests {
         assert_eq!(compa_decimal1.value, "AsdMX7XG");
     }
 
+    #[test]
     fn subtract_test() {
         let compa_decimal1 = CompaDecimal::from("1").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("1").unwrap();
@@ -459,9 +498,9 @@ mod tests {
 
         let compa_decimal1 = CompaDecimal::from("1").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("2");
-        assert!(compa_decimal1, CompaDecimalError);
+        assert!(compa_decimal1.is_err());
     }
-    
+
     #[test]
     fn cmp_test() {
         let compa_decimal1 = CompaDecimal::from("1").unwrap();
