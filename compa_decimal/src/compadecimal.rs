@@ -274,19 +274,24 @@ impl CompaDecimal {
         Ok(CompaDecimal { value: result.into_iter().collect() })
     }
 
-    pub fn cmp(&self, comparand: &str) -> std::cmp::Ordering {
+    pub fn cmp(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError> {
+        if valid_str(comparand) {
+            return Err(CompaDecimalError {
+                error_message: "All chars have to be valid compa digits".to_string()
+            })
+        }
         let compa_digits = get_compa_digits();
         if self.value.len() != comparand.len() {
-            return self.value.len().cmp(&comparand.len());
+            return Ok(self.value.len().cmp(&comparand.len()));
         }
         for (ac, bc) in self.value.chars().into_iter().zip(comparand.chars().into_iter()) {
             let ai = compa_digits.iter().position(|&x| x == ac).unwrap();
             let bi = compa_digits.iter().position(|&x| x == bc).unwrap();
             if ai != bi {
-                return ai.cmp(&bi);
+                return Ok(ai.cmp(&bi));
             }
         }
-        std::cmp::Ordering::Equal
+        Ok(std::cmp::Ordering::Equal)
     }
 }
 
@@ -523,13 +528,13 @@ mod tests {
     #[test]
     fn cmp_test() {
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
-        assert_eq!(compa_decimal1.cmp("2"), Ordering::Less);
+        assert_eq!(compa_decimal1.cmp("2").unwrap(), Ordering::Less);
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
-        assert_eq!(compa_decimal1.cmp("1"), Ordering::Equal);
+        assert_eq!(compa_decimal1.cmp("1").unwrap(), Ordering::Equal);
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
-        assert_eq!(compa_decimal1.cmp("0"), Ordering::Greater);
+        assert_eq!(compa_decimal1.cmp("0").unwrap(), Ordering::Greater);
     }
 
     #[test]
