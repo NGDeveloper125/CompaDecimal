@@ -220,6 +220,21 @@ impl CompaDecimal {
         result.reverse();
         CompaDecimal { value: result.into_iter().collect() }
     }
+
+    pub fn cmp(&self, b: &str) -> std::cmp::Ordering {
+        let compa_digits = get_compa_digits();
+        if self.value.len() != b.len() {
+            return self.value.len().cmp(&b.len());
+        }
+        for (ac, bc) in self.value.chars().into_iter().zip(b.chars().into_iter()) {
+            let ai = compa_digits.iter().position(|&x| x == ac).unwrap();
+            let bi = compa_digits.iter().position(|&x| x == bc).unwrap();
+            if ai != bi {
+                return ai.cmp(&bi);
+            }
+        }
+        std::cmp::Ordering::Equal
+    }
 }
 
 fn get_compa_digits() -> Vec<char> {
@@ -446,7 +461,8 @@ mod tests {
         let compa_decimal1 = compa_decimal1.subtract("2");
         assert!(compa_decimal1, CompaDecimalError);
     }
-
+    
+    #[test]
     fn cmp_test() {
         let compa_decimal1 = CompaDecimal::from("1").unwrap();
         assert_eq!(compa_decimal1.cmp("2"), Ordering::Less);
@@ -456,6 +472,5 @@ mod tests {
 
         let compa_decimal1 = CompaDecimal::from("1").unwrap();
         assert_eq!(compa_decimal1.cmp("0"), Ordering::Greater);
-
     }
 }
