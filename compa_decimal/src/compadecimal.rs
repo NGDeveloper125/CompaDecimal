@@ -259,7 +259,7 @@ impl CompaDecimal {
         Ok(CompaDecimal { value: result.into_iter().collect() })
     }
 
-    pub fn cmp(&self, b: &str) -> std::cmp::Ordering {
+    pub fn cmp(&self, comparand: &str) -> std::cmp::Ordering {
         let compa_digits = get_compa_digits();
         if self.value.len() != b.len() {
             return self.value.len().cmp(&b.len());

@@ -107,6 +107,14 @@ let new_compa = compa.subtract("as1Ad4").unwrap();
 assert_eq(new_compa.value, "ASr35".to_string());
 ```
 
+#### `cmp(&self, comparand: &str) -> std::cmp::Ordering`
+- Compare the comparand value to the CompaDecimal value.
+- Returns an Ordering object.
+```rust
+let compa = CompaDecimal::from("axswF9").unwrap();
+assert_eq(compa.cmp("axswF8"), Ordering::Less);
+```
+
 #### `len(&self) -> usize`
 - Returns the length of the CompaDecimal value.
 ```rust
