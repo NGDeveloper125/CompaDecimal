@@ -512,4 +512,13 @@ mod tests {
         let compa_decimal1 = CompaDecimal::from("1").unwrap();
         assert_eq!(compa_decimal1.cmp("0"), Ordering::Greater);
     }
+
+    #[test]
+    fn valid_str_test() {
+        assert!(valid_str("abc"));
+        assert!(valid_str("ABC"));
+        assert!(valid_str("123"));
+        assert!(!valid_str("£"));
+        assert!(!valid_str("¬")); 
+    }
 }
