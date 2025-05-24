@@ -197,7 +197,12 @@ impl CompaDecimal {
         CompaDecimal::decimal_to_compa::<u128>(new_value)
     }
 
-    pub fn add(&self, additional_value: &str) -> CompaDecimal {
+    pub fn add(&self, additional_value: &str) -> Result<CompaDecimal, CompaDecimalError> {
+        if valid_str(additional_value) {
+            return Err(CompaDecimalError {
+                error_message: "All chars have to be valid compa digits".to_string()
+            })
+        }
         let compa_digits = get_compa_digits();
         let base = compa_digits.len();
 
@@ -223,7 +228,7 @@ impl CompaDecimal {
         }
 
         result.reverse();
-        CompaDecimal { value: result.into_iter().collect() }
+        Ok(CompaDecimal { value: result.into_iter().collect() })
     }
 
     pub fn subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError> {
@@ -469,20 +474,20 @@ mod tests {
     #[test]
     fn add_test() {
         let compa_decimal1 = CompaDecimal::new();
-        let compa_decimal1 = compa_decimal1.add("1");
+        let compa_decimal1 = compa_decimal1.add("1").unwrap();
         assert_eq!(compa_decimal1.value, "1");
 
         let compa_decimal1 = CompaDecimal::new();
-        let compa_decimal1 = compa_decimal1.add("1AWS");
+        let compa_decimal1 = compa_decimal1.add("1AWS").unwrap();
         assert_eq!(compa_decimal1.value, "1AWS");
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
-        let compa_decimal1 = compa_decimal1.add("1");
+        let compa_decimal1 = compa_decimal1.add("1").unwrap();
         assert_eq!(compa_decimal1.value, "2");
     
     
         let compa_decimal1 = CompaDecimal::from_str("aAswf").unwrap();
-        let compa_decimal1 = compa_decimal1.add("AsdgrW11");
+        let compa_decimal1 = compa_decimal1.add("AsdgrW11").unwrap();
         assert_eq!(compa_decimal1.value, "AsdMX7XG");
     }
 
