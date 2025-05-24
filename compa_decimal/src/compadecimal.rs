@@ -261,10 +261,10 @@ impl CompaDecimal {
 
     pub fn cmp(&self, comparand: &str) -> std::cmp::Ordering {
         let compa_digits = get_compa_digits();
-        if self.value.len() != b.len() {
-            return self.value.len().cmp(&b.len());
+        if self.value.len() != comparand.len() {
+            return self.value.len().cmp(&comparand.len());
         }
-        for (ac, bc) in self.value.chars().into_iter().zip(b.chars().into_iter()) {
+        for (ac, bc) in self.value.chars().into_iter().zip(comparand.chars().into_iter()) {
             let ai = compa_digits.iter().position(|&x| x == ac).unwrap();
             let bi = compa_digits.iter().position(|&x| x == bc).unwrap();
             if ai != bi {
