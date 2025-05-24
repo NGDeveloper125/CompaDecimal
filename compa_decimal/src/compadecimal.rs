@@ -279,6 +279,10 @@ fn get_compa_digits() -> Vec<char> {
     "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect()
 }
 
+fn valid_str(string: &str) -> bool {
+    string.chars().all(|ch| get_compa_digits().contains(&ch))
+}
+
 fn get_next(current: &char) -> char {
     let digits: Vec<char> = get_compa_digits();
     let index = match digits.iter().position(|digit| digit == current) {
