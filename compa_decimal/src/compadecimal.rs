@@ -483,6 +483,22 @@ mod tests {
         let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u128>(1234556778785).unwrap();
         assert_eq!(compa_decimal1.value, "0");
+
+        let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u8>(1).unwrap();
+        assert_eq!(compa_decimal1.value, "1-Fq}q2");
+
+        let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u16>(100).unwrap();
+        assert_eq!(compa_decimal1.value, "1-Fq}p}");
+
+        let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u32>(2395784).unwrap();
+        assert_eq!(compa_decimal1.value, "1-Fp8j}");
+
+        let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
+        assert_eq!(compa_decimal1.value, "1Qe=6LX");
     }
 
     #[test]
@@ -539,6 +555,15 @@ mod tests {
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         assert_eq!(compa_decimal1.cmp("0").unwrap(), Ordering::Greater);
+
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp("4Dfh4hd").unwrap(), Ordering::Greater);
+
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp("df$fG35SDd").unwrap(), Ordering::Equal);
+
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp("df$fG35SDd$%FDgfd2d").unwrap(), Ordering::Less);
     }
 
     #[test]
@@ -548,5 +573,7 @@ mod tests {
         assert!(valid_str("123"));
         assert!(!valid_str("£"));
         assert!(!valid_str("¬")); 
+        assert!(!valid_str("カタカナ")); 
+        assert!(!valid_str("片")); 
     }
 }
