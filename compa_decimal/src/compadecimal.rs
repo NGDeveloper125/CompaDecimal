@@ -36,8 +36,8 @@ impl CompaDecimal {
         if self.value.len() == 1 {
             let updated_value = get_next(&digits[0]);
             match updated_value {
-                '0' => self.value = "10".to_string(),
-                _ => self.value = updated_value.to_string()
+                None => self.value = "10".to_string(),
+                Some(new_value) => self.value = new_value.to_string()
             }
             return;
         }
@@ -47,9 +47,9 @@ impl CompaDecimal {
             let updated_value = get_next(&digits[digits_len]);
     
             match updated_value {
-                '0' => digits[digits_len] = '0',
-                _ => {
-                    digits[digits_len] = updated_value;
+                None => digits[digits_len] = '0',
+                Some(new_value) => {
+                    digits[digits_len] = new_value;
                     self.value = digits.into_iter().collect::<String>();
                     return;
                 }
@@ -307,7 +307,7 @@ fn valid_str(string: &str) -> bool {
     string.chars().all(|ch| get_compa_digits().contains(&ch))
 }
 
-fn get_next(current: &char) -> char {
+fn get_next(current: &char) -> Option<char> {
     let digits: Vec<char> = get_compa_digits();
     let index = match digits.iter().position(|digit| digit == current) {
         Some(index) => index,
@@ -315,10 +315,10 @@ fn get_next(current: &char) -> char {
     };
     
     if index == (digits.len() - 1) {
-        return '0';
+        return None;
     }
 
-    digits[index + 1]
+    Some(digits[index + 1])
 }
 
 fn get_previous(current: &char) -> Option<char> {
@@ -343,10 +343,10 @@ mod tests {
 
     #[test]
     fn get_next_test() {
-        assert_eq!(get_next(&'0'), '1');
-        assert_eq!(get_next(&'9'), 'A');
-        assert_eq!(get_next(&'A'), 'a');
-        assert_eq!(get_next(&'~'), '0');
+        assert_eq!(get_next(&'0').unwrap(), '1');
+        assert_eq!(get_next(&'9').unwrap(), 'A');
+        assert_eq!(get_next(&'A').unwrap(), 'a');
+        assert_eq!(get_next(&'~'), None);
     }
 
     #[test]
