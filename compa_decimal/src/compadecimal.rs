@@ -28,34 +28,32 @@ impl CompaDecimal {
         })
     }
 
-    pub fn plus_one(&mut self) {
+    pub fn plus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
+        let compa_digits = get_compa_digits();
+        let base = compa_digits.len();
         let mut digits: Vec<char> = self.value.chars().collect();
-        let digits_len: usize = digits.len();
+        let mut carry = true;
 
-
-        if self.value.len() == 1 {
-            let updated_value = get_next(&digits[0]);
-            match updated_value {
-                None => self.value = "10".to_string(),
-                Some(new_value) => self.value = new_value.to_string()
-            }
-            return;
-        }
-
-        for i in 1..(digits_len + 1) {
-            let digits_len = &digits.len() - i;
-            let updated_value = get_next(&digits[digits_len]);
-    
-            match updated_value {
-                None => digits[digits_len] = '0',
-                Some(new_value) => {
-                    digits[digits_len] = new_value;
-                    self.value = digits.into_iter().collect::<String>();
-                    return;
+        for i in (0..digits.len()).rev() {
+            if carry {
+                let idx = compa_digits.iter()
+                                             .position(|&x| x == digits[i])
+                                             .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
+                if idx + 1 == base {
+                    digits[i] = compa_digits[0];
+                    carry = true;
+                } else {
+                    digits[i] = compa_digits[idx + 1];
+                    carry = false;
                 }
             }
         }
-        self.value = digits.into_iter().collect::<String>();
+
+        if carry {
+            digits.insert(0, compa_digits[1]);
+        }
+
+        Ok(CompaDecimal { value: digits.into_iter().collect() })
             
     }
 
@@ -359,28 +357,28 @@ mod tests {
 
     #[test]
     fn plus_one_test() {
-        let mut compa_decimal1 = CompaDecimal::from_str("0").unwrap();
-        compa_decimal1.plus_one();
+        let compa_decimal1 = CompaDecimal::from_str("0").unwrap();
+        let compa_decimal1 = compa_decimal1.plus_one().unwrap();
         assert_eq!(compa_decimal1.value, "1");
-        compa_decimal1.plus_one();
+        let compa_decimal1 = compa_decimal1.plus_one().unwrap();
         assert_eq!(compa_decimal1.value, "2");
-        let mut compa_decimal2 = CompaDecimal::from_str("9").unwrap();
-        compa_decimal2.plus_one();
+        let compa_decimal2 = CompaDecimal::from_str("9").unwrap();
+        let compa_decimal2 = compa_decimal2.plus_one().unwrap();
         assert_eq!(compa_decimal2.value, "A");
-        let mut compa_decimal3 = CompaDecimal::from_str("z").unwrap();
-        compa_decimal3.plus_one();
+        let compa_decimal3 = CompaDecimal::from_str("z").unwrap();
+        let compa_decimal3 = compa_decimal3.plus_one().unwrap();
         assert_eq!(compa_decimal3.value, "!");
-        let mut compa_decimal4 = CompaDecimal::from_str("10").unwrap();
-        compa_decimal4.plus_one();
+        let compa_decimal4 = CompaDecimal::from_str("10").unwrap();
+        let compa_decimal4 = compa_decimal4.plus_one().unwrap();
         assert_eq!(compa_decimal4.value, "11");
-        let mut compa_decimal5 = CompaDecimal::from_str("19").unwrap();
-        compa_decimal5.plus_one();
+        let compa_decimal5 = CompaDecimal::from_str("19").unwrap();
+        let compa_decimal5 = compa_decimal5.plus_one().unwrap();
         assert_eq!(compa_decimal5.value, "1A");
-        let mut compa_decimal6 = CompaDecimal::from_str("1z").unwrap();
-        compa_decimal6.plus_one();
+        let compa_decimal6 = CompaDecimal::from_str("1z").unwrap();
+        let compa_decimal6 = compa_decimal6.plus_one().unwrap();
         assert_eq!(compa_decimal6.value, "1!");
-        let mut compa_decimal7 = CompaDecimal::from_str("1~").unwrap();
-        compa_decimal7.plus_one();
+        let compa_decimal7 = CompaDecimal::from_str("1~").unwrap();
+        let compa_decimal7 = compa_decimal7.plus_one().unwrap();
         assert_eq!(compa_decimal7.value, "20");
     }
 
