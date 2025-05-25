@@ -38,7 +38,7 @@ impl CompaDecimal {
             if carry {
                 let idx = compa_digits.iter()
                                              .position(|&x| x == digits[i])
-                                             .ok_or_else(|| CompaDecimalError { error_message: "()".to_string() })?;
+                                             .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
                 if idx + 1 == base {
                     digits[i] = compa_digits[0];
                     carry = true;
