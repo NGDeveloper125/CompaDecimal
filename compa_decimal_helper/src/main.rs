@@ -11,9 +11,9 @@ fn main() {
     //let compa_decimal1 = CompaDecimal::decimal_to_compa::<u128>(681028938712386).unwrap();
     // let compa = CompaDecimal::from("1LY7VK").unwrap();
     // let increased = compa.increase_by::<u32>(1234).unwrap();
-    let compa = CompaDecimal::from_str("ASr35").unwrap();
-    let new_compa = compa.add("as1Ad4").unwrap();
-    println!("{}", new_compa.value)
+        let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
+        compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
+    println!("{}", compa_decimal1.value)
     // let size = 100;
     // let n = generated_random_biguint(size);
     // let m = biguint_to_compa(n);
