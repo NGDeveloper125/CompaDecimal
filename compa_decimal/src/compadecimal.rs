@@ -2,12 +2,12 @@ use std::{any::{type_name_of_val}, ops::Sub};
 
 use num::{PrimInt, Unsigned};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct CompaDecimalError {
     pub error_message: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct CompaDecimal {
     pub value: String 
 }
