@@ -13,12 +13,6 @@ impl Display for CompaDecimalError {
     }
 }
 
-impl Default for CompaDecimalError {
-    fn default() -> Self {
-        Self { error_message: String::new() }
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompaDecimal {
     pub value: String 
@@ -51,12 +45,6 @@ impl PartialOrd for CompaDecimal {
 impl Display for CompaDecimal {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
        write!(f, "{}", self.value) 
-    }
-}
-
-impl Default for CompaDecimal {
-    fn default() -> Self {
-        Self { value: "0".to_string() }
     }
 }
 
