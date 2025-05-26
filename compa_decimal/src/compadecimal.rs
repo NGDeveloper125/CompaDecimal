@@ -319,6 +319,8 @@ impl CompaDecimal {
 
 #[cfg(test)]
 mod tests {
+    use std::cmp::Ordering;
+
     use super::*;
 
     #[test]
@@ -522,5 +524,17 @@ mod tests {
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal2 = CompaDecimal::from_str("0").unwrap();
         assert!(compa_decimal1 > compa_decimal2);
+    }
+
+    #[test]
+    fn cmp_str_test() {
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp_str("4Dfh4hd").unwrap(), Ordering::Greater);
+
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp_str("df$fG35SDd").unwrap(), Ordering::Equal);
+
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp_str("df$fG35SDd$%FDgfd2d").unwrap(), Ordering::Less);
     }
 }
