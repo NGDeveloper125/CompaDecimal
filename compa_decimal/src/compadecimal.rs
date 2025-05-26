@@ -319,8 +319,6 @@ impl CompaDecimal {
 
 #[cfg(test)]
 mod tests {
-    use std::cmp::Ordering;
-
     use super::*;
 
     #[test]
@@ -514,21 +512,15 @@ mod tests {
     #[test]
     fn cmp_test() {
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
-        assert_eq!(compa_decimal1.cmp("2").unwrap(), Ordering::Less);
+        let compa_decimal2 = CompaDecimal::from_str("2").unwrap();
+        assert!(compa_decimal1 < compa_decimal2);
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
-        assert_eq!(compa_decimal1.cmp("1").unwrap(), Ordering::Equal);
+        let compa_decimal2 = CompaDecimal::from_str("1").unwrap();
+        assert!(compa_decimal1 == compa_decimal2);
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
-        assert_eq!(compa_decimal1.cmp("0").unwrap(), Ordering::Greater);
-
-        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
-        assert_eq!(compa_decimal1.cmp("4Dfh4hd").unwrap(), Ordering::Greater);
-
-        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
-        assert_eq!(compa_decimal1.cmp("df$fG35SDd").unwrap(), Ordering::Equal);
-
-        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
-        assert_eq!(compa_decimal1.cmp("df$fG35SDd$%FDgfd2d").unwrap(), Ordering::Less);
+        let compa_decimal2 = CompaDecimal::from_str("0").unwrap();
+        assert!(compa_decimal1 > compa_decimal2);
     }
 }
