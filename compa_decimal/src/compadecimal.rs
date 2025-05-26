@@ -257,7 +257,7 @@ impl CompaDecimal {
         }
         let compa_digits = get_compa_digits();
         let base = compa_digits.len();
-        match self.cmp(subtrahend) {
+        match self.cmp_str(subtrahend) {
             Ok(cmp_result) => {
                 if cmp_result == std::cmp::Ordering::Less {
                     return Err(CompaDecimalError { error_message: "Result would be negative".to_string() });
@@ -296,7 +296,7 @@ impl CompaDecimal {
         Ok(CompaDecimal { value: result.into_iter().collect() })
     }
 
-    pub fn cmp(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError> {
+    pub fn cmp_str(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError> {
         if !valid_str(comparand) {
             return Err(CompaDecimalError {
                 error_message: "All chars have to be valid compa digits".to_string()
