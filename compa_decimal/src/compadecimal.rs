@@ -257,7 +257,7 @@ impl CompaDecimal {
         }
         let compa_digits = get_compa_digits();
         let base = compa_digits.len();
-        match self.cmp(subtrahend) {
+        match self.cmp_str(subtrahend) {
             Ok(cmp_result) => {
                 if cmp_result == std::cmp::Ordering::Less {
                     return Err(CompaDecimalError { error_message: "Result would be negative".to_string() });
@@ -296,7 +296,7 @@ impl CompaDecimal {
         Ok(CompaDecimal { value: result.into_iter().collect() })
     }
 
-    pub fn cmp(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError> {
+    pub fn cmp_str(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError> {
         if !valid_str(comparand) {
             return Err(CompaDecimalError {
                 error_message: "All chars have to be valid compa digits".to_string()
@@ -319,6 +319,8 @@ impl CompaDecimal {
 
 #[cfg(test)]
 mod tests {
+    use std::cmp::Ordering;
+
     use super::*;
 
     #[test]
@@ -522,5 +524,17 @@ mod tests {
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal2 = CompaDecimal::from_str("0").unwrap();
         assert!(compa_decimal1 > compa_decimal2);
+    }
+
+    #[test]
+    fn cmp_str_test() {
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp_str("4Dfh4hd").unwrap(), Ordering::Greater);
+
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp_str("df$fG35SDd").unwrap(), Ordering::Equal);
+
+        let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
+        assert_eq!(compa_decimal1.cmp_str("df$fG35SDd$%FDgfd2d").unwrap(), Ordering::Less);
     }
 }
