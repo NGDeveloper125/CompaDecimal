@@ -12,6 +12,30 @@ pub struct CompaDecimal {
     pub value: String 
 }
 
+impl Ord for CompaDecimal {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+
+        let compa_digits = get_compa_digits();
+        if self.value.len() != other.value.len() {
+            return self.value.len().cmp(&other.value.len());
+        }
+        for (ac, bc) in self.value.chars().zip(other.value.chars()) {
+            let ai = compa_digits.iter().position(|&x| x == ac).unwrap();
+            let bi = compa_digits.iter().position(|&x| x == bc).unwrap();
+            if ai != bi {
+                return ai.cmp(&bi);
+            }
+        }
+        std::cmp::Ordering::Equal
+    }
+}
+
+impl PartialOrd for CompaDecimal {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.value.cmp(&other.value))
+    }
+}
+
 impl CompaDecimal {
     fn new() -> CompaDecimal {
         CompaDecimal { 
