@@ -19,6 +19,8 @@ impl Default for CompaDecimalError {
     }
 }
 
+impl std::error::Error for CompaDecimalError { }
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompaDecimal {
     pub value: String 
