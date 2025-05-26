@@ -287,55 +287,11 @@ fn valid_str(string: &str) -> bool {
     string.chars().all(|ch| get_compa_digits().contains(&ch))
 }
 
-fn get_next(current: &char) -> Option<char> {
-    let digits: Vec<char> = get_compa_digits();
-    let index = match digits.iter().position(|digit| digit == current) {
-        Some(index) => index,
-        None => 0
-    };
-    
-    if index == (digits.len() - 1) {
-        return None;
-    }
-
-    Some(digits[index + 1])
-}
-
-fn get_previous(current: &char) -> Option<char> {
-    let digits: Vec<char> = get_compa_digits();
-    let index = match digits.iter().position(|digit| digit == current) {
-        Some(index) => index,
-        None => return None
-    };
-
-    if index == 0 {
-        return None
-    }
-
-    Some(digits[index - 1])
-}
-
 #[cfg(test)]
 mod tests {
     use std::cmp::Ordering;
 
     use super::*;
-
-    #[test]
-    fn get_next_test() {
-        assert_eq!(get_next(&'0').unwrap(), '1');
-        assert_eq!(get_next(&'9').unwrap(), 'A');
-        assert_eq!(get_next(&'A').unwrap(), 'a');
-        assert_eq!(get_next(&'~'), None);
-    }
-
-    #[test]
-    fn get_previous_test() {
-        assert_eq!(get_previous(&'1'), Some('0'));
-        assert_eq!(get_previous(&'A'), Some('9'));
-        assert_eq!(get_previous(&'a'), Some('A'));
-        assert_eq!(get_previous(&'0'), None);
-    }
 
     #[test]
     fn plus_one_test() {
@@ -366,28 +322,28 @@ mod tests {
 
     #[test]
     fn miuns_one_test() {
-        let mut compa_decimal1 = CompaDecimal::from_str("1").unwrap();
+        let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal1 = compa_decimal1.minus_one().unwrap();
         assert_eq!(compa_decimal1.value, "0");
-        let mut compa_decimal2 = CompaDecimal::from_str("A").unwrap();
+        let compa_decimal2 = CompaDecimal::from_str("A").unwrap();
         let compa_decimal2 = compa_decimal2.minus_one().unwrap();
         assert_eq!(compa_decimal2.value, "9");
-        let mut compa_decimal3 = CompaDecimal::from_str("!").unwrap();
+        let compa_decimal3 = CompaDecimal::from_str("!").unwrap();
         let compa_decimal3 = compa_decimal3.minus_one().unwrap();
         assert_eq!(compa_decimal3.value, "z");
-        let mut compa_decimal4 = CompaDecimal::from_str("11").unwrap();
+        let compa_decimal4 = CompaDecimal::from_str("11").unwrap();
         let compa_decimal4 = compa_decimal4.minus_one().unwrap();
         assert_eq!(compa_decimal4.value, "10");
-        let mut compa_decimal5 = CompaDecimal::from_str("1A").unwrap();
+        let compa_decimal5 = CompaDecimal::from_str("1A").unwrap();
         let compa_decimal5 = compa_decimal5.minus_one().unwrap();
         assert_eq!(compa_decimal5.value, "19");
-        let mut compa_decimal6 = CompaDecimal::from_str("1z").unwrap();
+        let compa_decimal6 = CompaDecimal::from_str("1z").unwrap();
         let compa_decimal6 = compa_decimal6.minus_one().unwrap();
         assert_eq!(compa_decimal6.value, "1Z");
-        let mut compa_decimal7 = CompaDecimal::from_str("20").unwrap();
+        let compa_decimal7 = CompaDecimal::from_str("20").unwrap();
         let compa_decimal7 = compa_decimal7.minus_one().unwrap();
         assert_eq!(compa_decimal7.value, "1~");
-        let mut compa_decimal7 = CompaDecimal::from_str("10").unwrap();
+        let compa_decimal7 = CompaDecimal::from_str("10").unwrap();
         let compa_decimal7 = compa_decimal7.minus_one().unwrap();
         assert_eq!(compa_decimal7.value, "~");
     }
