@@ -6,6 +6,8 @@ use num::{PrimInt, Unsigned};
 pub struct CompaDecimalError {
     pub error_message: String
 }
+
+#[derive(Debug)]
 pub struct CompaDecimal {
     pub value: String 
 }
