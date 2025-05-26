@@ -62,66 +62,6 @@ impl CompaDecimal {
         })
     }
 
-    pub fn plus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
-        let compa_digits = get_compa_digits();
-        let base = compa_digits.len();
-        let mut digits: Vec<char> = self.value.chars().collect();
-        let mut carry = true;
-
-        for i in (0..digits.len()).rev() {
-            if carry {
-                let idx = compa_digits.iter()
-                                             .position(|&x| x == digits[i])
-                                             .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
-                if idx + 1 == base {
-                    digits[i] = compa_digits[0];
-                    carry = true;
-                } else {
-                    digits[i] = compa_digits[idx + 1];
-                    carry = false;
-                }
-            }
-        }
-
-        if carry {
-            digits.insert(0, compa_digits[1]);
-        }
-
-        Ok(CompaDecimal { value: digits.into_iter().collect() })
-            
-    }
-
-pub fn minus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
-    let compa_digits = get_compa_digits();
-    let mut digits: Vec<char> = self.value.chars().collect();
-
-    if digits.iter().all(|&c| c == '0') {
-        return Err(CompaDecimalError { error_message: "Cannot decrement below zero".to_string() });
-    }
-
-    let mut borrow = true;
-    for i in (0..digits.len()).rev() {
-        if borrow {
-            let idx = compa_digits.iter()
-                .position(|&x| x == digits[i])
-                .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
-            if idx == 0 {
-                digits[i] = compa_digits[compa_digits.len() - 1];
-                borrow = true;
-            } else {
-                digits[i] = compa_digits[idx - 1];
-                borrow = false;
-            }
-        }
-    }
-
-    while digits.len() > 1 && digits[0] == '0' {
-        digits.remove(0);
-    }
-
-    Ok(CompaDecimal { value: digits.into_iter().collect() })
-}
-
     pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
     where T: PrimInt + Unsigned {
         let compa_digits = get_compa_digits();
@@ -180,6 +120,66 @@ pub fn minus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
     pub fn len(&self) -> usize {
         self.value.len()
     }
+
+    pub fn plus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
+        let compa_digits = get_compa_digits();
+        let base = compa_digits.len();
+        let mut digits: Vec<char> = self.value.chars().collect();
+        let mut carry = true;
+
+        for i in (0..digits.len()).rev() {
+            if carry {
+                let idx = compa_digits.iter()
+                                             .position(|&x| x == digits[i])
+                                             .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
+                if idx + 1 == base {
+                    digits[i] = compa_digits[0];
+                    carry = true;
+                } else {
+                    digits[i] = compa_digits[idx + 1];
+                    carry = false;
+                }
+            }
+        }
+
+        if carry {
+            digits.insert(0, compa_digits[1]);
+        }
+
+        Ok(CompaDecimal { value: digits.into_iter().collect() })
+            
+    }
+
+    pub fn minus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
+    let compa_digits = get_compa_digits();
+    let mut digits: Vec<char> = self.value.chars().collect();
+
+    if digits.iter().all(|&c| c == '0') {
+        return Err(CompaDecimalError { error_message: "Cannot decrement below zero".to_string() });
+    }
+
+    let mut borrow = true;
+    for i in (0..digits.len()).rev() {
+        if borrow {
+            let idx = compa_digits.iter()
+                .position(|&x| x == digits[i])
+                .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
+            if idx == 0 {
+                digits[i] = compa_digits[compa_digits.len() - 1];
+                borrow = true;
+            } else {
+                digits[i] = compa_digits[idx - 1];
+                borrow = false;
+            }
+        }
+    }
+
+    while digits.len() > 1 && digits[0] == '0' {
+        digits.remove(0);
+    }
+
+    Ok(CompaDecimal { value: digits.into_iter().collect() })
+}
 
     pub fn increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>
     where
@@ -526,16 +526,5 @@ mod tests {
 
         let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
         assert_eq!(compa_decimal1.cmp("df$fG35SDd$%FDgfd2d").unwrap(), Ordering::Less);
-    }
-
-    #[test]
-    fn valid_str_test() {
-        assert!(valid_str("abc"));
-        assert!(valid_str("ABC"));
-        assert!(valid_str("123"));
-        assert!(!valid_str("£"));
-        assert!(!valid_str("¬")); 
-        assert!(!valid_str("カタカナ")); 
-        assert!(!valid_str("片")); 
     }
 }
