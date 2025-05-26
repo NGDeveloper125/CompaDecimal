@@ -11,7 +11,7 @@ fn main() {
     //let compa_decimal1 = CompaDecimal::decimal_to_compa::<u128>(681028938712386).unwrap();
     // let compa = CompaDecimal::from("1LY7VK").unwrap();
     // let increased = compa.increase_by::<u32>(1234).unwrap();
-        let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
+        let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
     println!("{}", compa_decimal1.value)
     // let size = 100;

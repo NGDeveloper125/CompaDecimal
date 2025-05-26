@@ -1,4 +1,4 @@
-use std::{any::type_name_of_val, fmt::Display, ops::Sub};
+use std::{any::type_name_of_val, fmt::Display, ops::Sub, str::FromStr};
 use num::{PrimInt, Unsigned};
 
 use crate::{utils::*, error::*};
@@ -44,22 +44,26 @@ impl Default for CompaDecimal {
     }
 }
 
-impl CompaDecimal {
-    fn new() -> CompaDecimal {
-        CompaDecimal { 
-            value: "0".to_string() 
-        }
-    }
+impl FromStr for CompaDecimal {
+    type Err= CompaDecimalError;
 
-    pub fn from_str(value: &str) -> Result<CompaDecimal, CompaDecimalError> {
-        if !valid_str(value) {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if !valid_str(s) {
             return Err(CompaDecimalError {
                 error_message: "All chars have to be valid compa digits".to_string()
             })
         }
         Ok(CompaDecimal { 
-            value: value.to_string() 
+            value: s.to_string() 
         })
+    }
+}
+
+impl CompaDecimal {
+    fn new() -> CompaDecimal {
+        CompaDecimal { 
+            value: "0".to_string() 
+        }
     }
 
     pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
