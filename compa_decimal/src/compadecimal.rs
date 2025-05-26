@@ -1,10 +1,16 @@
-use std::{any::{type_name_of_val}, ops::Sub};
+use std::{any::type_name_of_val, fmt::Display, ops::Sub};
 
 use num::{PrimInt, Unsigned};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompaDecimalError {
     pub error_message: String
+}
+
+impl Display for CompaDecimalError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.error_message)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -33,6 +39,12 @@ impl Ord for CompaDecimal {
 impl PartialOrd for CompaDecimal {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         Some(self.value.cmp(&other.value))
+    }
+}
+
+impl Display for CompaDecimal {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+       write!(f, "{}", self.value) 
     }
 }
 
