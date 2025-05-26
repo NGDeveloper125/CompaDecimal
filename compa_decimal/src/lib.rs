@@ -1,6 +1,6 @@
 pub mod compadecimal;
 pub mod error;
-pub mod utils;
+mod utils;
 
-pub use compadecimal::{CompaDecimal, /* other public items */};
+pub use compadecimal::CompaDecimal;
 pub use error::CompaDecimalError;

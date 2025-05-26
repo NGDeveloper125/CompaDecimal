@@ -1,7 +1,7 @@
 use std::{any::type_name_of_val, fmt::Display, ops::Sub};
 use num::{PrimInt, Unsigned};
 
-use crate::CompaDecimalError;
+use crate::{utils::*, error::*};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompaDecimal {
@@ -311,14 +311,6 @@ pub fn minus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
         }
         Ok(std::cmp::Ordering::Equal)
     }
-}
-
-fn get_compa_digits() -> Vec<char> {
-    "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect()
-}
-
-fn valid_str(string: &str) -> bool {
-    string.chars().all(|ch| get_compa_digits().contains(&ch))
 }
 
 #[cfg(test)]
