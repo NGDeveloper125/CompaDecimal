@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct CompaDecimalError {
     pub error_message: String
 }
@@ -8,12 +8,6 @@ pub struct CompaDecimalError {
 impl Display for CompaDecimalError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.error_message)
-    }
-}
-
-impl Default for CompaDecimalError {
-    fn default() -> Self {
-        Self { error_message: String::new() }
     }
 }
 
