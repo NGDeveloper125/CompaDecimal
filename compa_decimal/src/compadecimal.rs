@@ -306,7 +306,7 @@ impl CompaDecimal {
         if self.value.len() != comparand.len() {
             return Ok(self.value.len().cmp(&comparand.len()));
         }
-        for (ac, bc) in self.value.chars().into_iter().zip(comparand.chars().into_iter()) {
+        for (ac, bc) in self.value.chars().zip(comparand.chars()) {
             let ai = compa_digits.iter().position(|&x| x == ac).unwrap();
             let bi = compa_digits.iter().position(|&x| x == bc).unwrap();
             if ai != bi {
