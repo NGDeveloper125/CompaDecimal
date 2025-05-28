@@ -5,7 +5,7 @@ use crate::{utils::*, error::*};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompaDecimal {
-    pub value: String 
+    value: String 
 }
 
 impl Ord for CompaDecimal {
@@ -60,10 +60,14 @@ impl FromStr for CompaDecimal {
 }
 
 impl CompaDecimal {
-    fn new() -> CompaDecimal {
+    pub fn new() -> CompaDecimal {
         CompaDecimal { 
             value: "0".to_string() 
         }
+    }
+
+    pub fn get_value(&self) -> &str {
+        &self.value
     }
 
     pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>

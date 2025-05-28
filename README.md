@@ -1,6 +1,7 @@
 # CompaDecimal
 
-CompaDecimal is a Rust library (crate) that introduces a new decimal system designed to represent large numbers using a compact character set. By combining numbers, letters, and symbols, CompaDecimal allows for high-value numbers to be represented in a smaller number of characters, making it efficient for storage and transmission.
+CompaDecimal is a Rust library (crate) that introduces a new decimal system designed to represent large numbers using a compact character set. <br>
+By combining numbers, letters, and symbols, CompaDecimal allows for high-value numbers to be represented in a smaller number of characters, making it efficient for storage and transmission.
 
 This library is open-source and welcomes contributions, feedback, and suggestions from the community. An extended version of this crate is planned, which will include support for arbitrarily large numbers using `BigUint`.
 
@@ -27,9 +28,8 @@ CompaDecimal uses a custom character set that includes:
 
 This character set allows for a base-95 numeral system, enabling compact representation of large numbers.
 
-### 2. Core Functions
-
-The library provides the following core functions:
+### creating and casting examples 
+The library provides the following core functions and trait implementations:
 
 #### `CompaDecimal::new() -> CompaDecimal`
 - Creates a `CompaDecimal` object with the value set to `String::from("0")`.
@@ -39,11 +39,16 @@ let compa = CompaDecimal::new();
 assert_eq(compa.value, "0".to_string());
 ```
 
-#### `CompaDecimal::from(value: &str) -> Result<CompaDecimal, CompaDecimalError>`
+#### `FromStr trait`
 - Attempting to create a `CompaDecimal` object with the value set to the `value` parameter.
-- **Example**:
+- **Example 1**:
 ```rust
-let compa = CompaDecimal::from("123asd").unwrap();
+let compa: CompaDecimal = "123asd".parses().unwrap();
+assert_eq(compa.value, "123asd".to_string());
+```
+- **Example 2**:
+```rust
+let compa = "123asd".parses::<CompaDecimal>().unwrap();
 assert_eq(compa.value, "123asd".to_string());
 ```
 
