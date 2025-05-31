@@ -62,6 +62,14 @@ let compa = CompaDecimal::decimal_to_compa:<u64>:(123456789).unwrap();
 assert_eq(compa.value.get_value(), "1LY7VK".to_string());
 ```
 
+#### `get_value(&self) -> &str`
+- Returns the **CompaDecimal** object's value.
+```rust
+let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
+let compa_value = compa.get_value();
+assert_eq(compa_value, "1LY7VK");
+```
+
 #### `plus_one(self) -> Result<CompaDecimal, CompaDecimalError>`
 - Increments the CompaDecimal value by one and return a new object with the updated value.
 ```rust
