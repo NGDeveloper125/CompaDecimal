@@ -193,17 +193,8 @@ impl CompaDecimal {
     where
         T: PrimInt + Unsigned,
     {
-        let current_value = self.to_decimal::<u128>()?;
-        let amount_as_u128 = T::to_u128(&amount).ok_or_else(|| CompaDecimalError {
-            error_message: "Failed to convert the amount to u128".to_string(),
-        })?;
-        let new_value = current_value
-            .checked_add(amount_as_u128)
-            .ok_or_else(|| CompaDecimalError {
-                error_message: "Overflow occurred while adding the amount".to_string(),
-            })?;
-
-        CompaDecimal::decimal_to_compa(new_value)
+        let compa_amount = CompaDecimal::decimal_to_compa::<T>(amount)?;
+        self.add(compa_amount.get_value())
     }
 
     pub fn decrease_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>
