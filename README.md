@@ -36,7 +36,7 @@ The library provides the following core functions and trait implementations:
 - **Example**:
 ```rust
 let compa = CompaDecimal::new();
-assert_eq(compa.get_value(), "0".to_string());
+assert_eq(compa.get_value(), "0");
 ```
 
 #### `FromStr trait`
@@ -45,12 +45,12 @@ assert_eq(compa.get_value(), "0".to_string());
 - **Example 1**:
 ```rust
 let compa: CompaDecimal = "123asd".parse().unwrap();
-assert_eq(compa.get_value(), "123asd".to_string());
+assert_eq(compa.get_value(), "123asd");
 ```
 - **Example 2**:
 ```rust
 let compa = "123asd".parse::<CompaDecimal>().unwrap();
-assert_eq(compa.get_value(), "123asd".to_string());
+assert_eq(compa.get_value(), "123asd");
 ```
 
 #### `CompaDecimal::decimal_to_compa<T>(num: T) -> Result<CompaDecimal, CompaDecimalError>`
@@ -59,7 +59,7 @@ assert_eq(compa.get_value(), "123asd".to_string());
 - **Example**:
 ```rust
 let compa = CompaDecimal::decimal_to_compa::<u64>(123456789).unwrap();
-assert_eq(compa.get_value(), "1LY7VK".to_string());
+assert_eq(compa.get_value(), "1LY7VK".);
 ```
 **Note**:
 This function returns a Result for consistency, but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
@@ -77,19 +77,19 @@ assert_eq(compa_value, "1LY7VK");
 ```rust
 - 
 let compa = "A1".parse::<CompaDecimal>().unwrap();
-compa = compa.plus_one().unwrap();
-assert_eq(compa.get_value(), "A2".to_string());
+let increased = compa.plus_one().unwrap();
+assert_eq(increased.get_value(), "A2");
 ```
 **Note**:
 This function returns a Result for consistency, but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
 
 #### `minus_one(&self) -> Result<CompaDecimal, CompaDecimalError>`
-- Attempts to decrease the `CompaDecimal` value by one and return a new object with the updated value.
+- Attempts to decrease the `CompaDecimal` value by one and returns a new object with the updated value.
 - Returns an error if the value is zero (cannot decrement below zero).
 ```rust
 let compa = "A1".parse::<CompaDecimal>().unwrap();
 let decreased = compa.minus_one().unwrap();
-assert_eq(compa.get_value(), "A".to_string());
+assert_eq(decreased.get_value(), "A");
 ```
 
 #### `increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
@@ -98,25 +98,28 @@ assert_eq(compa.get_value(), "A".to_string());
 ```rust
 let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
 let increased = compa.increase_by::<u32>(1234).unwrap();
-assert_eq(increased.get_value(), "1LY7$Q".to_string());
+assert_eq(increased.get_value(), "1LY7$Q");
 ```
+**Note**:
+This function returns a Result for consistency, but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
 
 #### `decrease_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
 - Attempts to decrease the `CompaDecimal` value by a specified amount.
 - Supports unsigned integer types (u8, u16, u32, u64, u128).
+- Returns an error if the result value is less than zero (`CompaDecimal` cannot hold negative value).
 ```rust
 let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
 let decreased = compa.decrease_by::<u32>(1234).unwrap();
-assert_eq(increased.get_value(), "1LY7oE".to_string());
+assert_eq(decreased.get_value(), "1LY7oE");
 ```
 
 #### `add(&self, additional_value: &str) -> Result<CompaDecimal, CompaDecimalError>`
-- Add the additional value to the `CompaDecimal` value.
-- Returns an error if the additional_value contains invalid characters.
+- Adds the `additional_value` to the `CompaDecimal` value.
+- Returns an error if the `additional_value` contains invalid characters.
 ```rust
 let compa = "ASr35".parse::<CompaDecimal>().unwrap();
 let new_compa = compa.add("as1Ad4");
-assert_eq(new_compa.get_value(), "axswF9".to_string());
+assert_eq(new_compa.get_value(), "axswF9");
 ```
 
 #### `subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError>`
@@ -125,7 +128,7 @@ assert_eq(new_compa.get_value(), "axswF9".to_string());
 ```rust
 let compa = "axswF9".parse::<CompaDecimal>().unwrap();
 let new_compa = compa.subtract("as1Ad4").unwrap();
-assert_eq(new_compa.get_value(), "ASr35".to_string());
+assert_eq(new_compa.get_value(), "ASr35");
 ```
 
 #### `cmp_str(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError>`
@@ -157,8 +160,8 @@ assert_eq(123456789, decimal);
 ## Planned Features
 
 An extended version of this crate is in development, which will include:
-- Support for BigUint: Allowing representation and manipulation of arbitrarily large numbers.
-- Additional utilities for advanced operations on CompaDecimal values.
+- Support for `BigUint`: Allowing representation and manipulation of arbitrarily large numbers.
+- Additional utilities for advanced operations on `CompaDecimal` values.
 
 ## Installation
 
