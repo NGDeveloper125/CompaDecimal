@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct CompaDecimalError {
-    pub error_message: String
+    pub error_message: String,
 }
 
 impl Display for CompaDecimalError {
@@ -11,4 +11,4 @@ impl Display for CompaDecimalError {
     }
 }
 
-impl std::error::Error for CompaDecimalError { }
+impl std::error::Error for CompaDecimalError {}

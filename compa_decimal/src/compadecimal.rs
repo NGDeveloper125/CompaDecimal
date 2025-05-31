@@ -1,16 +1,15 @@
-use std::{any::type_name_of_val, fmt::Display, str::FromStr};
 use num::{PrimInt, Unsigned};
+use std::{any::type_name_of_val, fmt::Display, str::FromStr};
 
-use crate::{utils::*, error::*};
+use crate::{error::*, utils::*};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CompaDecimal {
-    value: String 
+    value: String,
 }
 
 impl Ord for CompaDecimal {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-
         let compa_digits = get_compa_digits();
         if self.value.len() != other.value.len() {
             return self.value.len().cmp(&other.value.len());
@@ -34,35 +33,37 @@ impl PartialOrd for CompaDecimal {
 
 impl Display for CompaDecimal {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-       write!(f, "{}", self.value) 
+        write!(f, "{}", self.value)
     }
 }
 
 impl Default for CompaDecimal {
     fn default() -> Self {
-        Self { value: "0".to_string() }
+        Self {
+            value: "0".to_string(),
+        }
     }
 }
 
 impl FromStr for CompaDecimal {
-    type Err= CompaDecimalError;
+    type Err = CompaDecimalError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if !valid_str(s) {
             return Err(CompaDecimalError {
-                error_message: "All chars have to be valid compa digits".to_string()
-            })
+                error_message: "All chars have to be valid compa digits".to_string(),
+            });
         }
-        Ok(CompaDecimal { 
-            value: s.to_string() 
+        Ok(CompaDecimal {
+            value: s.to_string(),
         })
     }
 }
 
 impl CompaDecimal {
     pub fn new() -> CompaDecimal {
-        CompaDecimal { 
-            value: "0".to_string() 
+        CompaDecimal {
+            value: "0".to_string(),
         }
     }
 
@@ -71,7 +72,9 @@ impl CompaDecimal {
     }
 
     pub fn decimal_to_compa<T>(mut num: T) -> Result<CompaDecimal, CompaDecimalError>
-    where T: PrimInt + Unsigned {
+    where
+        T: PrimInt + Unsigned,
+    {
         let compa_digits = get_compa_digits();
         let base = T::from(compa_digits.len()).unwrap();
         let mut result = String::new();
@@ -86,7 +89,9 @@ impl CompaDecimal {
             num = num / base;
         }
 
-        Ok(CompaDecimal { value: result.chars().rev().collect() })
+        Ok(CompaDecimal {
+            value: result.chars().rev().collect(),
+        })
     }
 
     pub fn to_decimal<T>(&self) -> Result<T, CompaDecimalError>
@@ -97,7 +102,7 @@ impl CompaDecimal {
         let compa_digits = get_compa_digits();
         let base = T::from(compa_digits.len()).unwrap();
         let mut result: T = T::zero();
-    
+
         for digit in value_digits {
             match compa_digits.iter().position(|x| x == &digit) {
                 Some(position) => {
@@ -121,7 +126,7 @@ impl CompaDecimal {
                 }
             }
         }
-    
+
         Ok(result)
     }
 
@@ -137,9 +142,15 @@ impl CompaDecimal {
 
         for i in (0..digits.len()).rev() {
             if carry {
-                let idx = compa_digits.iter()
-                                             .position(|&x| x == digits[i])
-                                             .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
+                let idx = compa_digits
+                    .iter()
+                    .position(|&x| x == digits[i])
+                    .ok_or_else(|| CompaDecimalError {
+                        error_message: format!(
+                            "Unexpected error! invalid char found - {}",
+                            digits[i]
+                        ),
+                    })?;
                 if idx + 1 == base {
                     digits[i] = compa_digits[0];
                     carry = true;
@@ -154,40 +165,51 @@ impl CompaDecimal {
             digits.insert(0, compa_digits[1]);
         }
 
-        Ok(CompaDecimal { value: digits.into_iter().collect() })
-            
+        Ok(CompaDecimal {
+            value: digits.into_iter().collect(),
+        })
     }
 
     pub fn minus_one(&self) -> Result<CompaDecimal, CompaDecimalError> {
-    let compa_digits = get_compa_digits();
-    let mut digits: Vec<char> = self.value.chars().collect();
+        let compa_digits = get_compa_digits();
+        let mut digits: Vec<char> = self.value.chars().collect();
 
-    if digits.iter().all(|&c| c == '0') {
-        return Err(CompaDecimalError { error_message: "Cannot decrement below zero".to_string() });
-    }
+        if digits.iter().all(|&c| c == '0') {
+            return Err(CompaDecimalError {
+                error_message: "Cannot decrement below zero".to_string(),
+            });
+        }
 
-    let mut borrow = true;
-    for i in (0..digits.len()).rev() {
-        if borrow {
-            let idx = compa_digits.iter()
-                .position(|&x| x == digits[i])
-                .ok_or_else(|| CompaDecimalError { error_message: format!("Unexpected error! invalid char found - {}", digits[i]) })?;
-            if idx == 0 {
-                digits[i] = compa_digits[compa_digits.len() - 1];
-                borrow = true;
-            } else {
-                digits[i] = compa_digits[idx - 1];
-                borrow = false;
+        let mut borrow = true;
+        for i in (0..digits.len()).rev() {
+            if borrow {
+                let idx = compa_digits
+                    .iter()
+                    .position(|&x| x == digits[i])
+                    .ok_or_else(|| CompaDecimalError {
+                        error_message: format!(
+                            "Unexpected error! invalid char found - {}",
+                            digits[i]
+                        ),
+                    })?;
+                if idx == 0 {
+                    digits[i] = compa_digits[compa_digits.len() - 1];
+                    borrow = true;
+                } else {
+                    digits[i] = compa_digits[idx - 1];
+                    borrow = false;
+                }
             }
         }
-    }
 
-    while digits.len() > 1 && digits[0] == '0' {
-        digits.remove(0);
-    }
+        while digits.len() > 1 && digits[0] == '0' {
+            digits.remove(0);
+        }
 
-    Ok(CompaDecimal { value: digits.into_iter().collect() })
-}
+        Ok(CompaDecimal {
+            value: digits.into_iter().collect(),
+        })
+    }
 
     pub fn increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>
     where
@@ -198,7 +220,7 @@ impl CompaDecimal {
     }
 
     pub fn decrease_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>
-    where 
+    where
         T: PrimInt + Unsigned,
     {
         let compa_amount = CompaDecimal::decimal_to_compa::<T>(amount)?;
@@ -208,8 +230,8 @@ impl CompaDecimal {
     pub fn add(&self, additional_value: &str) -> Result<CompaDecimal, CompaDecimalError> {
         if !valid_str(additional_value) {
             return Err(CompaDecimalError {
-                error_message: "All chars have to be valid compa digits".to_string()
-            })
+                error_message: "All chars have to be valid compa digits".to_string(),
+            });
         }
         let compa_digits = get_compa_digits();
         let base = compa_digits.len();
@@ -217,8 +239,12 @@ impl CompaDecimal {
         let mut a: Vec<char> = self.value.chars().collect();
         let mut b: Vec<char> = additional_value.chars().collect();
 
-        while a.len() < b.len() { a.insert(0, '0'); }
-        while b.len() < a.len() { b.insert(0, '0'); }
+        while a.len() < b.len() {
+            a.insert(0, '0');
+        }
+        while b.len() < a.len() {
+            b.insert(0, '0');
+        }
 
         let mut carry = 0;
         let mut result = Vec::with_capacity(a.len() + 1);
@@ -236,31 +262,39 @@ impl CompaDecimal {
         }
 
         result.reverse();
-        Ok(CompaDecimal { value: result.into_iter().collect() })
+        Ok(CompaDecimal {
+            value: result.into_iter().collect(),
+        })
     }
 
     pub fn subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError> {
         if !valid_str(subtrahend) {
             return Err(CompaDecimalError {
-                error_message: "All chars have to be valid compa digits".to_string()
-            })
+                error_message: "All chars have to be valid compa digits".to_string(),
+            });
         }
         let compa_digits = get_compa_digits();
         let base = compa_digits.len();
         match self.cmp_str(subtrahend) {
             Ok(cmp_result) => {
                 if cmp_result == std::cmp::Ordering::Less {
-                    return Err(CompaDecimalError { error_message: "Result would be negative".to_string() });
+                    return Err(CompaDecimalError {
+                        error_message: "Result would be negative".to_string(),
+                    });
                 }
-            },
-            Err(error) => return Err(error)
+            }
+            Err(error) => return Err(error),
         }
 
         let mut a: Vec<char> = self.value.chars().collect();
         let mut b: Vec<char> = subtrahend.chars().collect();
 
-        while a.len() < b.len() { a.insert(0, '0'); }
-        while b.len() < a.len() { b.insert(0, '0'); }
+        while a.len() < b.len() {
+            a.insert(0, '0');
+        }
+        while b.len() < a.len() {
+            b.insert(0, '0');
+        }
 
         let mut result = Vec::with_capacity(a.len());
         let mut borrow = 0;
@@ -283,14 +317,16 @@ impl CompaDecimal {
         }
 
         result.reverse();
-        Ok(CompaDecimal { value: result.into_iter().collect() })
+        Ok(CompaDecimal {
+            value: result.into_iter().collect(),
+        })
     }
 
     pub fn cmp_str(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError> {
         if !valid_str(comparand) {
             return Err(CompaDecimalError {
-                error_message: "All chars have to be valid compa digits".to_string()
-            })
+                error_message: "All chars have to be valid compa digits".to_string(),
+            });
         }
         let compa_digits = get_compa_digits();
         if self.value.len() != comparand.len() {
@@ -370,16 +406,16 @@ mod tests {
 
     #[test]
     fn decimal_to_compa_test() {
-
         let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16).unwrap();
         assert_eq!(compa_decimal1.value, "D");
         let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329).unwrap();
         assert_eq!(compa_decimal2.value, "Cb");
         let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
         assert_eq!(compa_decimal3.value, "LwOa");
-        let compa_decimal4 = CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
+        let compa_decimal4 =
+            CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455)
+                .unwrap();
         assert_eq!(compa_decimal4.value, "a2o~TWI*I+5G('\\99=ab");
-
     }
 
     #[test]
@@ -389,12 +425,15 @@ mod tests {
 
         let compa_decimal2 = CompaDecimal::from_str("Cb").unwrap();
         assert_eq!(compa_decimal2.to_decimal::<u32>().unwrap(), 1329);
-        
+
         let compa_decimal3 = CompaDecimal::from_str("LwOa").unwrap();
         assert_eq!(compa_decimal3.to_decimal::<u64>().unwrap(), 27068251);
-        
+
         let compa_decimal4 = CompaDecimal::from_str("a2o~TWI*I+5G('\\99=ab").unwrap();
-        assert_eq!(compa_decimal4.to_decimal::<u128>().unwrap(), 340282366920938463463374607431768211455);
+        assert_eq!(
+            compa_decimal4.to_decimal::<u128>().unwrap(),
+            340282366920938463463374607431768211455
+        );
     }
 
     #[test]
@@ -470,8 +509,7 @@ mod tests {
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal1 = compa_decimal1.add("1").unwrap();
         assert_eq!(compa_decimal1.value, "2");
-    
-    
+
         let compa_decimal1 = CompaDecimal::from_str("aAswf").unwrap();
         let compa_decimal1 = compa_decimal1.add("AsdgrW11").unwrap();
         assert_eq!(compa_decimal1.value, "AsdMX7XG");
@@ -490,8 +528,7 @@ mod tests {
         let compa_decimal1 = CompaDecimal::from_str("2").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("1").unwrap();
         assert_eq!(compa_decimal1.value, "1");
-    
-    
+
         let compa_decimal1 = CompaDecimal::from_str("AsdMX7XG").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("AsdgrW11").unwrap();
         assert_eq!(compa_decimal1.value, "aAswf");
@@ -519,12 +556,21 @@ mod tests {
     #[test]
     fn cmp_str_test() {
         let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
-        assert_eq!(compa_decimal1.cmp_str("4Dfh4hd").unwrap(), Ordering::Greater);
+        assert_eq!(
+            compa_decimal1.cmp_str("4Dfh4hd").unwrap(),
+            Ordering::Greater
+        );
 
         let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
-        assert_eq!(compa_decimal1.cmp_str("df$fG35SDd").unwrap(), Ordering::Equal);
+        assert_eq!(
+            compa_decimal1.cmp_str("df$fG35SDd").unwrap(),
+            Ordering::Equal
+        );
 
         let compa_decimal1 = CompaDecimal::from_str("df$fG35SDd").unwrap();
-        assert_eq!(compa_decimal1.cmp_str("df$fG35SDd$%FDgfd2d").unwrap(), Ordering::Less);
+        assert_eq!(
+            compa_decimal1.cmp_str("df$fG35SDd$%FDgfd2d").unwrap(),
+            Ordering::Less
+        );
     }
 }

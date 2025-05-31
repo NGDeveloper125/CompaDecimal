@@ -1,4 +1,3 @@
-
 pub fn get_compa_digits() -> Vec<char> {
     "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect()
 }
@@ -9,7 +8,7 @@ pub fn valid_str(string: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
-use super::*;
+    use super::*;
 
     #[test]
     fn valid_str_test() {
@@ -17,8 +16,8 @@ use super::*;
         assert!(valid_str("ABC"));
         assert!(valid_str("123"));
         assert!(!valid_str("£"));
-        assert!(!valid_str("¬")); 
-        assert!(!valid_str("カタカナ")); 
-        assert!(!valid_str("片")); 
+        assert!(!valid_str("¬"));
+        assert!(!valid_str("カタカナ"));
+        assert!(!valid_str("片"));
     }
 }
