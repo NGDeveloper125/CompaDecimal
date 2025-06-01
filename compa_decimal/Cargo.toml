@@ -1,0 +1,16 @@
+[package]
+name = "compa_decimal"
+version = "0.1.0"
+authors = ["NGDeveloper125"]
+edition = "2021"
+description = "A compact and efficient decimal system using a custom character set for representing large numbers in fewer characters."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/NGDeveloper125/CompaDecimal"
+documentation = "https://docs.rs/compa_decimal"
+homepage = "https://github.com/NGDeveloper125/CompaDecimal"
+readme = "README.md"
+keywords = ["decimal", "compact", "number", "encoding", "base95"]
+categories = ["encoding", "mathematics", "data-structures"]
+
+[dependencies]
+num = "0.4"

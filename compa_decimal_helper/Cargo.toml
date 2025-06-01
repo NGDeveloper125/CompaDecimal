@@ -1,0 +1,9 @@
+[package]
+name = "compa_decimal_helper"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compa_decimal = { path = "../compa_decimal"}
+num-bigint = "0.4"
+rand = "0.9.1"
