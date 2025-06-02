@@ -45,6 +45,19 @@ impl Default for CompaDecimal {
     }
 }
 
+impl TryFrom<&str> for CompaDecimal {
+    type Error = CompaDecimalError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if !valid_str(value) {
+            return Err(CompaDecimalError {
+                error_message: "All chars have to be valid compa digits".to_string(),
+            });
+        }
+        Ok(CompaDecimal { value: value.to_string() })
+    }
+}
+
 impl FromStr for CompaDecimal {
     type Err = CompaDecimalError;
 
