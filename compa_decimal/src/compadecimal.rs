@@ -361,6 +361,16 @@ mod tests {
     use std::cmp::Ordering;
 
     use super::*;
+    
+    #[test]
+    fn try_from_test() {
+        let compa_decimal1: CompaDecimal = "123asd".try_into().unwrap();
+        assert_eq!(compa_decimal1.get_value(), "123asd"); 
+
+
+        let compa_decimal1: Result<CompaDecimal, CompaDecimalError> = "123asd£".try_into();
+        assert!(compa_decimal1.is_err()); 
+    }
 
     #[test]
     fn plus_one_test() {
