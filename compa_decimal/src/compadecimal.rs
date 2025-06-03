@@ -371,7 +371,7 @@ mod tests {
     #[test]
     fn try_from_test() {
         let compa_decimal1 = CompaDecimal::try_from("123asd").unwrap();
-        assert_eq!(compa_decimal1.get_value(), "123asd");
+        assert_eq!(compa_decimal1, "123asd");
 
         let compa_decimal1 = CompaDecimal::try_from("123asd£");
         assert!(compa_decimal1.is_err());
@@ -380,7 +380,7 @@ mod tests {
     #[test]
     fn try_into() {
         let compa_decimal1: CompaDecimal = "123asd".try_into().unwrap();
-        assert_eq!(compa_decimal1.get_value(), "123asd"); 
+        assert_eq!(compa_decimal1, "123asd"); 
 
 
         let compa_decimal1: Result<CompaDecimal, CompaDecimalError> = "123asd£".try_into();
@@ -400,69 +400,69 @@ mod tests {
     fn plus_one_test() {
         let compa_decimal1 = CompaDecimal::from_str("0").unwrap();
         let compa_decimal1 = compa_decimal1.plus_one().unwrap();
-        assert_eq!(compa_decimal1.value, "1");
+        assert_eq!(compa_decimal1, "1");
         let compa_decimal1 = compa_decimal1.plus_one().unwrap();
-        assert_eq!(compa_decimal1.value, "2");
+        assert_eq!(compa_decimal1, "2");
         let compa_decimal2 = CompaDecimal::from_str("9").unwrap();
         let compa_decimal2 = compa_decimal2.plus_one().unwrap();
-        assert_eq!(compa_decimal2.value, "A");
+        assert_eq!(compa_decimal2, "A");
         let compa_decimal3 = CompaDecimal::from_str("z").unwrap();
         let compa_decimal3 = compa_decimal3.plus_one().unwrap();
-        assert_eq!(compa_decimal3.value, "!");
+        assert_eq!(compa_decimal3, "!");
         let compa_decimal4 = CompaDecimal::from_str("10").unwrap();
         let compa_decimal4 = compa_decimal4.plus_one().unwrap();
-        assert_eq!(compa_decimal4.value, "11");
+        assert_eq!(compa_decimal4, "11");
         let compa_decimal5 = CompaDecimal::from_str("19").unwrap();
         let compa_decimal5 = compa_decimal5.plus_one().unwrap();
-        assert_eq!(compa_decimal5.value, "1A");
+        assert_eq!(compa_decimal5, "1A");
         let compa_decimal6 = CompaDecimal::from_str("1z").unwrap();
         let compa_decimal6 = compa_decimal6.plus_one().unwrap();
-        assert_eq!(compa_decimal6.value, "1!");
+        assert_eq!(compa_decimal6, "1!");
         let compa_decimal7 = CompaDecimal::from_str("1~").unwrap();
         let compa_decimal7 = compa_decimal7.plus_one().unwrap();
-        assert_eq!(compa_decimal7.value, "20");
+        assert_eq!(compa_decimal7, "20");
     }
 
     #[test]
     fn miuns_one_test() {
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal1 = compa_decimal1.minus_one().unwrap();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1, "0");
         let compa_decimal2 = CompaDecimal::from_str("A").unwrap();
         let compa_decimal2 = compa_decimal2.minus_one().unwrap();
-        assert_eq!(compa_decimal2.value, "9");
+        assert_eq!(compa_decimal2, "9");
         let compa_decimal3 = CompaDecimal::from_str("!").unwrap();
         let compa_decimal3 = compa_decimal3.minus_one().unwrap();
-        assert_eq!(compa_decimal3.value, "z");
+        assert_eq!(compa_decimal3, "z");
         let compa_decimal4 = CompaDecimal::from_str("11").unwrap();
         let compa_decimal4 = compa_decimal4.minus_one().unwrap();
-        assert_eq!(compa_decimal4.value, "10");
+        assert_eq!(compa_decimal4, "10");
         let compa_decimal5 = CompaDecimal::from_str("1A").unwrap();
         let compa_decimal5 = compa_decimal5.minus_one().unwrap();
-        assert_eq!(compa_decimal5.value, "19");
+        assert_eq!(compa_decimal5, "19");
         let compa_decimal6 = CompaDecimal::from_str("1z").unwrap();
         let compa_decimal6 = compa_decimal6.minus_one().unwrap();
-        assert_eq!(compa_decimal6.value, "1Z");
+        assert_eq!(compa_decimal6, "1Z");
         let compa_decimal7 = CompaDecimal::from_str("20").unwrap();
         let compa_decimal7 = compa_decimal7.minus_one().unwrap();
-        assert_eq!(compa_decimal7.value, "1~");
+        assert_eq!(compa_decimal7, "1~");
         let compa_decimal7 = CompaDecimal::from_str("10").unwrap();
         let compa_decimal7 = compa_decimal7.minus_one().unwrap();
-        assert_eq!(compa_decimal7.value, "~");
+        assert_eq!(compa_decimal7, "~");
     }
 
     #[test]
     fn decimal_to_compa_test() {
         let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16).unwrap();
-        assert_eq!(compa_decimal1.value, "D");
+        assert_eq!(compa_decimal1, "D");
         let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329).unwrap();
-        assert_eq!(compa_decimal2.value, "Cb");
+        assert_eq!(compa_decimal2, "Cb");
         let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
-        assert_eq!(compa_decimal3.value, "LwOa");
+        assert_eq!(compa_decimal3, "LwOa");
         let compa_decimal4 =
             CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455)
                 .unwrap();
-        assert_eq!(compa_decimal4.value, "a2o~TWI*I+5G('\\99=ab");
+        assert_eq!(compa_decimal4, "a2o~TWI*I+5G('\\99=ab");
     }
 
     #[test]
@@ -493,92 +493,92 @@ mod tests {
     fn increase_by_test() {
         let mut compa_decimal1 = CompaDecimal::new();
         compa_decimal1 = compa_decimal1.increase_by::<u8>(1).unwrap();
-        assert_eq!(compa_decimal1.value, "1");
+        assert_eq!(compa_decimal1, "1");
 
         let mut compa_decimal2 = CompaDecimal::new();
         compa_decimal2 = compa_decimal2.increase_by::<u32>(1234).unwrap();
-        assert_eq!(compa_decimal2.value, "bB");
+        assert_eq!(compa_decimal2, "bB");
 
         let mut compa_decimal3 = CompaDecimal::new();
         compa_decimal3 = compa_decimal3.increase_by::<u64>(1234567).unwrap();
-        assert_eq!(compa_decimal3.value, "1r&$");
+        assert_eq!(compa_decimal3, "1r&$");
 
         let mut compa_decimal4 = CompaDecimal::new();
         compa_decimal4 = compa_decimal4.increase_by::<u128>(1234556778785).unwrap();
-        assert_eq!(compa_decimal4.value, "1-Fq}q3");
+        assert_eq!(compa_decimal4, "1-Fq}q3");
     }
 
     #[test]
     fn decrease_by_test() {
         let mut compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u8>(1).unwrap();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1, "0");
 
         let mut compa_decimal1 = CompaDecimal::from_str("bB").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u32>(1234).unwrap();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1, "0");
 
         let mut compa_decimal1 = CompaDecimal::from_str("1r&$").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u64>(1234567).unwrap();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1, "0");
 
         let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u128>(1234556778785).unwrap();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1, "0");
 
         let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u8>(1).unwrap();
-        assert_eq!(compa_decimal1.value, "1-Fq}q2");
+        assert_eq!(compa_decimal1, "1-Fq}q2");
 
         let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u16>(100).unwrap();
-        assert_eq!(compa_decimal1.value, "1-Fq}p}");
+        assert_eq!(compa_decimal1, "1-Fq}p}");
 
         let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u32>(2395784).unwrap();
-        assert_eq!(compa_decimal1.value, "1-Fp8j}");
+        assert_eq!(compa_decimal1, "1-Fp8j}");
 
         let mut compa_decimal1 = CompaDecimal::from_str("1-Fq}q3").unwrap();
         compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
-        assert_eq!(compa_decimal1.value, "1Qe=6LX");
+        assert_eq!(compa_decimal1, "1Qe=6LX");
     }
 
     #[test]
     fn add_test() {
         let compa_decimal1 = CompaDecimal::new();
         let compa_decimal1 = compa_decimal1.add("1").unwrap();
-        assert_eq!(compa_decimal1.value, "1");
+        assert_eq!(compa_decimal1, "1");
 
         let compa_decimal1 = CompaDecimal::new();
         let compa_decimal1 = compa_decimal1.add("1AWS").unwrap();
-        assert_eq!(compa_decimal1.value, "1AWS");
+        assert_eq!(compa_decimal1, "1AWS");
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal1 = compa_decimal1.add("1").unwrap();
-        assert_eq!(compa_decimal1.value, "2");
+        assert_eq!(compa_decimal1, "2");
 
         let compa_decimal1 = CompaDecimal::from_str("aAswf").unwrap();
         let compa_decimal1 = compa_decimal1.add("AsdgrW11").unwrap();
-        assert_eq!(compa_decimal1.value, "AsdMX7XG");
+        assert_eq!(compa_decimal1, "AsdMX7XG");
     }
 
     #[test]
     fn subtract_test() {
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("1").unwrap();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1, "0");
 
         let compa_decimal1 = CompaDecimal::from_str("1AWS").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("1AWS").unwrap();
-        assert_eq!(compa_decimal1.value, "0");
+        assert_eq!(compa_decimal1, "0");
 
         let compa_decimal1 = CompaDecimal::from_str("2").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("1").unwrap();
-        assert_eq!(compa_decimal1.value, "1");
+        assert_eq!(compa_decimal1, "1");
 
         let compa_decimal1 = CompaDecimal::from_str("AsdMX7XG").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("AsdgrW11").unwrap();
-        assert_eq!(compa_decimal1.value, "aAswf");
+        assert_eq!(compa_decimal1, "aAswf");
 
         let compa_decimal1 = CompaDecimal::from_str("1").unwrap();
         let compa_decimal1 = compa_decimal1.subtract("2");
