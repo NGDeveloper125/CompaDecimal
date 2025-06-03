@@ -73,6 +73,12 @@ impl FromStr for CompaDecimal {
     }
 }
 
+impl PartialEq<&str> for CompaDecimal {
+    fn eq(&self, other: &&str) -> bool {
+        self.value == *other
+    }
+}
+
 impl CompaDecimal {
     pub fn new() -> CompaDecimal {
         CompaDecimal {
