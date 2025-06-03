@@ -388,6 +388,15 @@ mod tests {
     }
 
     #[test]
+    fn eq_test() {
+        let compa_decimal1: CompaDecimal = "abc123".parse().unwrap();
+        assert_eq!(compa_decimal1, "abc123");
+
+        let compa_decimal2: CompaDecimal = "abc1234".parse().unwrap();
+        assert_ne!(compa_decimal2, "abc123");
+    }
+
+    #[test]
     fn plus_one_test() {
         let compa_decimal1 = CompaDecimal::from_str("0").unwrap();
         let compa_decimal1 = compa_decimal1.plus_one().unwrap();
