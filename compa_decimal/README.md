@@ -19,7 +19,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-compa_decimal = "0.1.0"
+compa_decimal = "0.1.1"
 ```
 
 Import in your Rust code:
@@ -36,20 +36,20 @@ use compa_decimal::CompaDecimal;
 
 ```rust
 let compa = CompaDecimal::new();
-assert_eq!(compa.get_value(), "0");
+assert_eq!(compa, "0");
 ```
 
 ### Parsing from &str
 ```rust
 let compa: CompaDecimal = "123asd".parse().unwrap();
-assert_eq!(compa.get_value(), "123asd");
+assert_eq!(compa, "123asd");
 ```
 
 ### Decimal to CompaDecimal
 
 ```rust
 let compa = CompaDecimal::decimal_to_compa::<u64>(123456789).unwrap();
-assert_eq!(compa.get_value(), "1LY7VK");
+assert_eq!(compa, "1LY7VK");
 ```
 
 ### Get Value
@@ -104,6 +104,40 @@ assert_eq!(compa.len(), 6);
 let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
 let decimal: u64 = compa.to_decimal().unwrap();
 assert_eq!(decimal, 123456789);
+```
+
+### Compare to string
+
+You can compare a `CompaDecimal` directly with a string:
+
+```rust
+let compa = "123asd".parse::<CompaDecimal>().unwrap();
+assert_eq!(compa, "123asd");
+assert_ne!(compa, "not_equal");
+```
+
+### Attempt to convert string to `CompaDecimal`
+
+You can use `TryFrom` to create a `CompaDecimal` from a string, which returns a `Result`:
+
+```rust
+use std::convert::TryFrom;
+
+let compa = CompaDecimal::try_from("123asd").unwrap();
+assert_eq!(compa, "123asd");
+
+// This will return an error if the string contains invalid characters
+let invalid = CompaDecimal::try_from("123asd£");
+assert!(invalid.is_err());
+```
+
+You can also use `try_into` for ergonomic conversion:
+
+```rust
+use std::convert::TryInto;
+
+let compa: CompaDecimal = "123asd".try_into().unwrap();
+assert_eq!(compa, "123asd");
 ```
 
 ---
