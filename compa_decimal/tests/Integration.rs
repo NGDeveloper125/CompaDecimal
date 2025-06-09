@@ -1,7 +1,6 @@
 use compa_decimal::*;
 use std::cmp::Ordering;
 
-
 #[test]
 fn try_from_test() {
     let compa_decimal1 = CompaDecimal::try_from("123asd").unwrap();
@@ -14,11 +13,10 @@ fn try_from_test() {
 #[test]
 fn try_into() {
     let compa_decimal1: CompaDecimal = "123asd".try_into().unwrap();
-    assert_eq!(compa_decimal1, "123asd"); 
-
+    assert_eq!(compa_decimal1, "123asd");
 
     let compa_decimal1: Result<CompaDecimal, CompaDecimalError> = "123asd£".try_into();
-    assert!(compa_decimal1.is_err()); 
+    assert!(compa_decimal1.is_err());
 }
 
 #[test]
@@ -94,8 +92,7 @@ fn decimal_to_compa_test() {
     let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
     assert_eq!(compa_decimal3, "LwOa");
     let compa_decimal4 =
-        CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455)
-            .unwrap();
+        CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
     assert_eq!(compa_decimal4, "a2o~TWI*I+5G('\\99=ab");
 }
 
@@ -254,4 +251,3 @@ fn cmp_str_test() {
         Ordering::Less
     );
 }
-
