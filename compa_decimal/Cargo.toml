@@ -1,6 +1,6 @@
 [package]
 name = "compa_decimal"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["NGDeveloper125"]
 edition = "2021"
 description = "A compact and efficient decimal system using a custom character set for representing large numbers in fewer characters."
