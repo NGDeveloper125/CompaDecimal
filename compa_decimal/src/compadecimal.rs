@@ -54,7 +54,9 @@ impl TryFrom<&str> for CompaDecimal {
                 error_message: "All chars have to be valid compa digits".to_string(),
             });
         }
-        Ok(CompaDecimal { value: value.to_string() })
+        Ok(CompaDecimal {
+            value: value.to_string(),
+        })
     }
 }
 
