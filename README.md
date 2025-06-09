@@ -36,7 +36,7 @@ The library provides the following core functions and trait implementations:
 - **Example**:
 ```rust
 let compa = CompaDecimal::new();
-assert_eq(compa.get_value(), "0");
+assert_eq(compa, "0");
 ```
 
 #### `FromStr trait`
@@ -45,12 +45,12 @@ assert_eq(compa.get_value(), "0");
 - **Example 1**:
 ```rust
 let compa: CompaDecimal = "123asd".parse().unwrap();
-assert_eq(compa.get_value(), "123asd");
+assert_eq(compa, "123asd");
 ```
 - **Example 2**:
 ```rust
 let compa = "123asd".parse::<CompaDecimal>().unwrap();
-assert_eq(compa.get_value(), "123asd");
+assert_eq(compa, "123asd");
 ```
 
 #### `CompaDecimal::decimal_to_compa<T>(num: T) -> Result<CompaDecimal, CompaDecimalError>`
@@ -59,10 +59,10 @@ assert_eq(compa.get_value(), "123asd");
 - **Example**:
 ```rust
 let compa = CompaDecimal::decimal_to_compa::<u64>(123456789).unwrap();
-assert_eq(compa.get_value(), "1LY7VK".);
+assert_eq(compa, "1LY7VK".);
 ```
 **Note**:
-This function returns a Result for consistency, but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
+This function returns a Result but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
 
 #### `get_value(&self) -> &str`
 - Returns the **CompaDecimal** object's value.
@@ -78,10 +78,10 @@ assert_eq(compa_value, "1LY7VK");
 - 
 let compa = "A1".parse::<CompaDecimal>().unwrap();
 let increased = compa.plus_one().unwrap();
-assert_eq(increased.get_value(), "A2");
+assert_eq(increased, "A2");
 ```
 **Note**:
-This function returns a Result for consistency, but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
+This function returns a Result but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
 
 #### `minus_one(&self) -> Result<CompaDecimal, CompaDecimalError>`
 - Attempts to decrease the `CompaDecimal` value by one and returns a new object with the updated value.
@@ -89,7 +89,7 @@ This function returns a Result for consistency, but under normal circumstances, 
 ```rust
 let compa = "A1".parse::<CompaDecimal>().unwrap();
 let decreased = compa.minus_one().unwrap();
-assert_eq(decreased.get_value(), "A");
+assert_eq(decreased, "A");
 ```
 
 #### `increase_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
@@ -98,10 +98,10 @@ assert_eq(decreased.get_value(), "A");
 ```rust
 let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
 let increased = compa.increase_by::<u32>(1234).unwrap();
-assert_eq(increased.get_value(), "1LY7$Q");
+assert_eq(increased, "1LY7$Q");
 ```
 **Note**:
-This function returns a Result for consistency, but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
+This function returns a Result but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
 
 #### `decrease_by<T>(&self, amount: T) -> Result<CompaDecimal, CompaDecimalError>`
 - Attempts to decrease the `CompaDecimal` value by a specified amount.
@@ -110,7 +110,7 @@ This function returns a Result for consistency, but under normal circumstances, 
 ```rust
 let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
 let decreased = compa.decrease_by::<u32>(1234).unwrap();
-assert_eq(decreased.get_value(), "1LY7oE");
+assert_eq(decreased, "1LY7oE");
 ```
 
 #### `add(&self, additional_value: &str) -> Result<CompaDecimal, CompaDecimalError>`
@@ -119,7 +119,7 @@ assert_eq(decreased.get_value(), "1LY7oE");
 ```rust
 let compa = "ASr35".parse::<CompaDecimal>().unwrap();
 let new_compa = compa.add("as1Ad4");
-assert_eq(new_compa.get_value(), "axswF9");
+assert_eq(new_compa, "axswF9");
 ```
 
 #### `subtract(&self, subtrahend: &str) -> Result<CompaDecimal, CompaDecimalError>`
@@ -128,7 +128,7 @@ assert_eq(new_compa.get_value(), "axswF9");
 ```rust
 let compa = "axswF9".parse::<CompaDecimal>().unwrap();
 let new_compa = compa.subtract("as1Ad4").unwrap();
-assert_eq(new_compa.get_value(), "ASr35");
+assert_eq(new_compa, "ASr35");
 ```
 
 #### `cmp_str(&self, comparand: &str) -> Result<std::cmp::Ordering, CompaDecimalError>`
@@ -157,6 +157,30 @@ let decimal = compa.to_decimal::<u64>().unwrap();
 assert_eq(123456789, decimal);
 ```
 
+#### `eq(&self, other: &&str) -> bool` (PartialEq<&str> trait)
+- Allows direct comparison between a `CompaDecimal` object and a string.
+- **Example**:
+```rust
+let compa = "123asd".parse::<CompaDecimal>().unwrap();
+assert_eq!(compa, "123asd");
+assert_ne!(compa, "not_equal");
+```
+
+#### `try_from(value: &str) -> Result<Self, Self::Error>` (TryFrom<&str> trait)
+- Attempts to create a `CompaDecimal` object from a string, returning a `Result`.
+- Returns an error if the string contains invalid characters.
+- **Example**:
+```rust
+use std::convert::TryFrom;
+
+let compa = CompaDecimal::try_from("123asd").unwrap();
+assert_eq!(compa, "123asd");
+
+// This will return an error if the string contains invalid characters
+let invalid = CompaDecimal::try_from("123asd£");
+assert!(invalid.is_err());
+```
+
 ## Planned Features
 
 An extended version of this crate is in development, which will include:
@@ -169,7 +193,7 @@ Add the following to your Cargo.toml to include CompaDecimal in your project:
 
 ```toml
 [dependencies]
-compadecimal = "0.1.0"
+compadecimal = "0.1.1"
 ```
 
 Then, import the crate in your Rust code:
