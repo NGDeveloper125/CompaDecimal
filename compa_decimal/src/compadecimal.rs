@@ -1,4 +1,4 @@
-use num::{PrimInt, Unsigned, Zero, ToPrimitive};
+use num::{PrimInt, ToPrimitive, Unsigned, Zero};
 use num_bigint::BigUint;
 use std::{any::type_name_of_val, fmt::Display, str::FromStr};
 
@@ -99,7 +99,7 @@ impl CompaDecimal {
     {
         let compa_digits = get_compa_digits();
         let base = T::from(compa_digits.len()).ok_or_else(|| CompaDecimalError {
-            error_message: "Failed to initialise generic type".to_string()
+            error_message: "Failed to initialise generic type".to_string(),
         })?;
         let mut result = String::new();
 
@@ -109,8 +109,8 @@ impl CompaDecimal {
 
         while num > T::zero() {
             let reminder = (num % base).to_usize().ok_or_else(|| CompaDecimalError {
-            error_message: "Failed to convert reminder result to usize".to_string()
-        })?;
+                error_message: "Failed to convert reminder result to usize".to_string(),
+            })?;
             result.push(compa_digits[reminder]);
             num = num / base;
         }
@@ -132,14 +132,16 @@ impl CompaDecimal {
 
         while num > BigUint::zero() {
             let reminder = (&num % &base).to_usize().ok_or_else(|| CompaDecimalError {
-                error_message: "Failed to convert reminder to usize".to_string()
+                error_message: "Failed to convert reminder to usize".to_string(),
             })?;
 
             result.push(compa_digits[reminder]);
             num /= &base;
         }
 
-        Ok(CompaDecimal { value: result.chars().rev().collect() })
+        Ok(CompaDecimal {
+            value: result.chars().rev().collect(),
+        })
     }
 
     pub fn to_decimal<T>(&self) -> Result<T, CompaDecimalError>
@@ -149,7 +151,7 @@ impl CompaDecimal {
         let value_digits: Vec<char> = self.value.chars().collect();
         let compa_digits = get_compa_digits();
         let base = T::from(compa_digits.len()).ok_or_else(|| CompaDecimalError {
-            error_message: "Failed to initialise generic type".to_string()
+            error_message: "Failed to initialise generic type".to_string(),
         })?;
         let mut result: T = T::zero();
 
@@ -186,15 +188,19 @@ impl CompaDecimal {
         let mut result = BigUint::zero();
 
         for digit in self.value.chars() {
-            let pos = compa_digits.iter().position(|compa_digit| compa_digit == &digit);
+            let pos = compa_digits
+                .iter()
+                .position(|compa_digit| compa_digit == &digit);
             let index = match pos {
                 Some(i) => i,
                 None => {
-                    return Err(CompaDecimalError { error_message: format!("Invalid character: {}", digit) });
+                    return Err(CompaDecimalError {
+                        error_message: format!("Invalid character: {}", digit),
+                    });
                 }
             };
             result = &result * &base + BigUint::from(index);
-        };
+        }
         Ok(result)
     }
 
