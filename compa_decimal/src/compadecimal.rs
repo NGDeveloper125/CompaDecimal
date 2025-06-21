@@ -174,6 +174,24 @@ impl CompaDecimal {
         Ok(result)
     }
 
+    pub fn to_biguint(&self) -> Result<BigUint, CompaDecimalError> {
+        let compa_digits = get_compa_digits();
+        let base = BigUint::from(compa_digits.len());
+        let mut result = BigUint::zero();
+
+        for digit in self.value.chars() {
+            let pos = compa_digits.iter().position(|compa_digit| compa_digit == &digit);
+            let index = match pos {
+                Some(i) => i,
+                None => {
+                    return Err(CompaDecimalError { error_message: format!("Invalid character: {}", digit) });
+                }
+            };
+            result = &result * &base + BigUint::from(index);
+        };
+        Ok(result)
+    }
+
     pub fn len(&self) -> usize {
         self.value.len()
     }
