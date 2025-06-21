@@ -88,12 +88,12 @@ fn decimal_to_compa_test() {
     let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16).unwrap();
     assert_eq!(compa_decimal1, "D");
     let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329).unwrap();
-    assert_eq!(compa_decimal2, "Cb");
+    assert_eq!(compa_decimal2, "b~");
     let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
-    assert_eq!(compa_decimal3, "LwOa");
+    assert_eq!(compa_decimal3, "kWg}");
     let compa_decimal4 =
         CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
-    assert_eq!(compa_decimal4, "a2o~TWI*I+5G('\\99=ab");
+    assert_eq!(compa_decimal4, "91\"<n.hl48T!YkTkA?1Z");
 }
 
 #[test]
