@@ -116,6 +116,28 @@ impl CompaDecimal {
         })
     }
 
+    pub fn biguint_to_decimal(num: &BigUint) -> Result<CompaDecimal, CompaDecimalError> {
+        let compa_digits = get_compa_digits();
+        let base = BigUint::from(compa_digits.len());
+        let mut num = num.clone();
+        let mut result = String::new();
+
+        if num.is_zero() {
+            return Ok(CompaDecimal::new());
+        }
+
+        while num > BigUint::zero() {
+            let reminder = (&num % &base).to_usize().ok_or_else(|| CompaDecimalError {
+                error_message: "Failed to convert reminder to usize".to_string()
+            })?;
+
+            result.push(compa_digits[reminder]);
+            num /= &base;
+        }
+
+        Ok(CompaDecimal { value: result.chars().rev().collect() })
+    }
+
     pub fn to_decimal<T>(&self) -> Result<T, CompaDecimalError>
     where
         T: PrimInt + Unsigned,
