@@ -1,5 +1,5 @@
 pub fn get_compa_digits() -> Vec<char> {
-    "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{~".chars().collect()
+    "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz!\"#$%&'()*+,-./:;<=>?@[\\]^_`|}{ ~".chars().collect()
 }
 
 pub fn valid_str(string: &str) -> bool {
@@ -12,7 +12,7 @@ mod tests {
 
     #[test]
     fn valid_str_test() {
-        assert!(valid_str("abc"));
+        assert!(valid_str(" abc"));
         assert!(valid_str("ABC"));
         assert!(valid_str("123"));
         assert!(!valid_str("£"));
