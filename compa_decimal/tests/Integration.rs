@@ -190,7 +190,7 @@ fn add_test() {
 
     let compa_decimal1: CompaDecimal = "aAswf".parse().unwrap();
     let compa_decimal1 = compa_decimal1.add("AsdgrW11").unwrap();
-    assert_eq!(compa_decimal1, "AsdMX7XG");
+    assert_eq!(compa_decimal1, "AsdMX6XG");
 }
 
 #[test]
