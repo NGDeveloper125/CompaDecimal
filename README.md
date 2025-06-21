@@ -12,8 +12,8 @@ This library is open-source and welcomes contributions, feedback, and suggestion
 The primary goal of CompaDecimal is to create a compact and efficient decimal system that:
 - **Represents large numbers in fewer characters** by utilizing a custom character set.
 - **Supports multiple numeric types**, including unsigned integers (`u8`, `u16`, `u32`, `u64`, `u128`).
+- **Now Supports arbitrarily large numbers:** Easily convert between `BigUint` and the `CompaDecimal` format.
 - **Provides conversion utilities** between standard decimal numbers and the `CompaDecimal` format.
-- **Ensures extensibility** for future support of `BigUint` for arbitrarily large numbers.
 
 ---
 
@@ -59,7 +59,17 @@ assert_eq(compa, "123asd");
 - **Example**:
 ```rust
 let compa = CompaDecimal::decimal_to_compa::<u64>(123456789).unwrap();
-assert_eq(compa, "1LY7VK".);
+assert_eq(compa, "1LY7VK");
+```
+**Note**:
+This function returns a Result but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
+
+#### `biguint_to_compa(num: &BigUint) -> Result<CompaDecimal, CompaDecimalError> `
+- Attempts to convert a `BigUint` number into a `CompaDecimal` value.
+- **Example**:
+```rust
+let compa = CompaDecimal::bigunit_to_compa(&BigUint::from(123456789)).unwrap();
+assert_eq(compa, "1T~PC");
 ```
 **Note**:
 This function returns a Result but under normal circumstances, it should never return an error. An error would only occur if the internal state of the `CompaDecimal` is invalid (e.g., contains non-compa digits), which should not happen if the object was constructed correctly.
@@ -155,6 +165,14 @@ assert_eq(compa.len(), 6);
 let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
 let decimal = compa.to_decimal::<u64>().unwrap();
 assert_eq(123456789, decimal);
+```
+
+#### `to_biguint(&self) -> Result<BigUint, CompaDecimalError>`
+- Attempts to convert a `CompaDecimal` value back into a `BigUint` number. 
+```rust
+let compa = "1T~PC".parse::<CompaDecimal>().unwrap();
+let biguint = compa.to_biguint().unwrap();
+assert_eq(123456789, biguint);
 ```
 
 #### `eq(&self, other: &&str) -> bool` (PartialEq<&str> trait)
