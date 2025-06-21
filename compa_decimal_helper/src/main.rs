@@ -1,3 +1,5 @@
+use core::num;
+
 use compa_decimal::compadecimal::*;
 use num_bigint::BigUint;
 
@@ -12,11 +14,14 @@ fn main() {
     //let compa_decimal1 = CompaDecimal::decimal_to_compa::<u128>(681028938712386).unwrap();
     // let compa = CompaDecimal::from("1LY7VK").unwrap();
     // let increased = compa.increase_by::<u32>(1234).unwrap();
-    let compa_decimal1= CompaDecimal::biguint_to_compa(&BigUint::from(138945729038763748276832u128)).unwrap();
-    //let number = compa_decimal1.to_decimal::<u128>().unwrap();
+    let compa_decimal1: CompaDecimal = "abc".parse().unwrap();
+    let number = compa_decimal1.to_biguint().unwrap();
     //let number = compa_decimal1.to_decimal::<u128>().unwrap();
     // compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
-    println!("{}", compa_decimal1);
+    println!("{}", number);
+
+    let back_to_compa = CompaDecimal::biguint_to_compa(&number).unwrap();
+    println!("{}", back_to_compa);
     // let size = 100;
     // let n = generated_random_biguint(size);
     // let m = biguint_to_compa(n);
