@@ -128,15 +128,15 @@ fn increase_by_test() {
 
     let mut compa_decimal2 = CompaDecimal::new();
     compa_decimal2 = compa_decimal2.increase_by::<u32>(1234).unwrap();
-    assert_eq!(compa_decimal2, "bB");
+    assert_eq!(compa_decimal2, "B~");
 
     let mut compa_decimal3 = CompaDecimal::new();
     compa_decimal3 = compa_decimal3.increase_by::<u64>(1234567).unwrap();
-    assert_eq!(compa_decimal3, "1r&$");
+    assert_eq!(compa_decimal3, "1p.Q");
 
     let mut compa_decimal4 = CompaDecimal::new();
     compa_decimal4 = compa_decimal4.increase_by::<u128>(1234556778785).unwrap();
-    assert_eq!(compa_decimal4, "1-Fq}q3");
+    assert_eq!(compa_decimal4, "1#VaH@U");
 }
 
 #[test]
