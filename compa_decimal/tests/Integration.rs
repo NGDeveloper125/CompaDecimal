@@ -1,4 +1,5 @@
 use compa_decimal::*;
+use num::{BigInt, BigUint, One, Zero};
 use std::cmp::Ordering;
 
 #[test]
@@ -97,6 +98,18 @@ fn decimal_to_compa_test() {
 }
 
 #[test]
+fn biguint_to_compa_test() {
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::zero()).unwrap();
+    assert_eq!(compa_decimal1, "0");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::one()).unwrap();
+    assert_eq!(compa_decimal1, "1");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::from(123u32)).unwrap();
+    assert_eq!(compa_decimal1, "1J");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::from(138945729038763748276832u128)).unwrap();
+    assert_eq!(compa_decimal1, "HPzsKhzl#n2{");
+}
+
+#[test]
 fn to_decimal_test() {
     let compa_decimal1: CompaDecimal = "D".parse().unwrap();
     assert_eq!(compa_decimal1.to_decimal::<u8>().unwrap(), 16);
@@ -112,6 +125,19 @@ fn to_decimal_test() {
         compa_decimal4.to_decimal::<u128>().unwrap(),
         565984502558084335516371423
     );
+}
+
+#[test]
+fn to_biguint_test() {
+
+    let compa_decimal1: CompaDecimal = "abc".parse().unwrap();
+    let number = compa_decimal1.to_biguint().unwrap();
+    assert_eq!(number, BigUint::parse_bytes(b"100525", 10).unwrap());
+
+    let compa_decimal1: CompaDecimal = "This is a test for a long text to be turn into numbers".parse().unwrap();
+    let number = compa_decimal1.to_biguint().unwrap();
+    assert_eq!(number, 
+               BigUint::parse_bytes(b"31841552784196741090929648471941957080193990671456726377283361892016646254266411630046406212893117657668547", 10).unwrap())
 }
 
 #[test]
