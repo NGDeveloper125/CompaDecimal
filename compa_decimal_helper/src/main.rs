@@ -20,7 +20,7 @@ fn main() {
     // compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
     println!("{}", number);
 
-    let back_to_compa = CompaDecimal::biguint_to_compa(&number).unwrap();
+    let back_to_compa = CompaDecimal::biguint_to_compa(&BigUint::from(123456789_u128)).unwrap();
     println!("{}", back_to_compa);
     // let size = 100;
     // let n = generated_random_biguint(size);

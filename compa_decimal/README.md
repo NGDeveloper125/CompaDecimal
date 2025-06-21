@@ -6,10 +6,10 @@ A compact and efficient decimal system using a custom character set for represen
 
 ## Features
 
-- **Custom Character Set:** Uses numbers, uppercase and lowercase letters, and special characters for a base-95 numeral system.
+- **Custom Character Set:** Uses numbers, uppercase and lowercase letters, and special characters for a base-96 numeral system.
 - **Supports Multiple Numeric Types:** Easily convert between unsigned integers (`u8`, `u16`, `u32`, `u64`, `u128`) and the `CompaDecimal` format.
+- **Now Supports arbitrarily large numbers:** Easily convert between `BigUint` and the `CompaDecimal` format.
 - **Conversion Utilities:** Convert between standard decimal numbers and the compact `CompaDecimal` representation.
-- **Extensible:** Designed for future support of arbitrarily large numbers.
 
 ---
 
@@ -50,6 +50,13 @@ assert_eq!(compa, "123asd");
 ```rust
 let compa = CompaDecimal::decimal_to_compa::<u64>(123456789).unwrap();
 assert_eq!(compa, "1LY7VK");
+```
+
+### BigUint to CompaDecimal
+
+```rust
+let compa = CompaDecimal::biguint_to_compa::(BigUint::from(123456789_u128)).unwrap();
+assert_eq!(compa, "1T~PC");
 ```
 
 ### Get Value
@@ -104,6 +111,14 @@ assert_eq!(compa.len(), 6);
 let compa = "1LY7VK".parse::<CompaDecimal>().unwrap();
 let decimal: u64 = compa.to_decimal().unwrap();
 assert_eq!(decimal, 123456789);
+```
+
+### Convert Back to BigUint
+
+```rust
+let compa = "1T~PC".parse::<CompaDecimal>().unwrap();
+let biguint = compa.to_biguint().unwrap();
+assert_eq!(biguint, 123456789);
 ```
 
 ### Compare to string
