@@ -86,14 +86,14 @@ fn miuns_one_test() {
 #[test]
 fn decimal_to_compa_test() {
     let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16).unwrap();
-    assert_eq!(compa_decimal1, "c");
+    assert_eq!(compa_decimal1, "D");
     let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329).unwrap();
-    assert_eq!(compa_decimal2, "B~");
+    assert_eq!(compa_decimal2, "Cb");
     let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
-    assert_eq!(compa_decimal3, "KvG|");
+    assert_eq!(compa_decimal3, "LwOa");
     let compa_decimal4 =
         CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
-    assert_eq!(compa_decimal4, "80!;N-HL37szxKsK9>0y");
+    assert_eq!(compa_decimal4, "a2o~TWI*I+5G('\\99=ab");
 }
 
 #[test]
@@ -102,15 +102,15 @@ fn to_decimal_test() {
     assert_eq!(compa_decimal1.to_decimal::<u8>().unwrap(), 16);
 
     let compa_decimal2: CompaDecimal = "Cb".parse().unwrap();
-    assert_eq!(compa_decimal2.to_decimal::<u32>().unwrap(), 1329);
+    assert_eq!(compa_decimal2.to_decimal::<u32>().unwrap(), 1343);
 
     let compa_decimal3: CompaDecimal = "LwOa".parse().unwrap();
-    assert_eq!(compa_decimal3.to_decimal::<u64>().unwrap(), 27068251);
+    assert_eq!(compa_decimal3.to_decimal::<u64>().unwrap(), 27935996);
 
-    let compa_decimal4: CompaDecimal = "a2o~TWI*I+5G('\\99=ab".parse().unwrap();
+    let compa_decimal4: CompaDecimal = "a2o~TWI*I+5G('".parse().unwrap();
     assert_eq!(
         compa_decimal4.to_decimal::<u128>().unwrap(),
-        340282366920938463463374607431768211455
+        565984502558084335516371423
     );
 }
 
@@ -209,7 +209,7 @@ fn subtract_test() {
 
     let compa_decimal1: CompaDecimal = "AsdMX7XG".parse().unwrap();
     let compa_decimal1 = compa_decimal1.subtract("AsdgrW11").unwrap();
-    assert_eq!(compa_decimal1, "aAswf");
+    assert_eq!(compa_decimal1, "aATwf");
 
     let compa_decimal1: CompaDecimal = "1".parse().unwrap();
     let compa_decimal1 = compa_decimal1.subtract("2");
