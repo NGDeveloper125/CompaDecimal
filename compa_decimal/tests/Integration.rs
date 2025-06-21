@@ -147,15 +147,15 @@ fn decrease_by_test() {
 
     let mut compa_decimal1: CompaDecimal = "bB".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u32>(1234).unwrap();
-    assert_eq!(compa_decimal1, "0");
+    assert_eq!(compa_decimal1, "b");
 
     let mut compa_decimal1: CompaDecimal = "1r&$".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u64>(1234567).unwrap();
-    assert_eq!(compa_decimal1, "0");
+    assert_eq!(compa_decimal1, "3^g");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u128>(1234556778785).unwrap();
-    assert_eq!(compa_decimal1, "0");
+    assert_eq!(compa_decimal1, "9\"L%WT");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u8>(1).unwrap();
@@ -163,15 +163,15 @@ fn decrease_by_test() {
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u16>(100).unwrap();
-    assert_eq!(compa_decimal1, "1-Fq}p}");
+    assert_eq!(compa_decimal1, "1-Fq}p ");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u32>(2395784).unwrap();
-    assert_eq!(compa_decimal1, "1-Fp8j}");
+    assert_eq!(compa_decimal1, "1-Fpc~H");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
-    assert_eq!(compa_decimal1, "1Qe=6LX");
+    assert_eq!(compa_decimal1, "1q>uFz*");
 }
 
 #[test]
