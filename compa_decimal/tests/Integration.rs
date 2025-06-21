@@ -1,4 +1,5 @@
 use compa_decimal::*;
+use num::{BigInt, BigUint, One, Zero};
 use std::cmp::Ordering;
 
 #[test]
@@ -94,6 +95,18 @@ fn decimal_to_compa_test() {
     let compa_decimal4 =
         CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
     assert_eq!(compa_decimal4, "91\"<n.hl48T!YkTkA?1Z");
+}
+
+#[test]
+fn biguint_to_compa_test() {
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::zero()).unwrap();
+    assert_eq!(compa_decimal1, "0");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::one()).unwrap();
+    assert_eq!(compa_decimal1, "1");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::from(123u32)).unwrap();
+    assert_eq!(compa_decimal1, "1J");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::from(138945729038763748276832u128)).unwrap();
+    assert_eq!(compa_decimal1, "HPzsKhzl#n2{");
 }
 
 #[test]

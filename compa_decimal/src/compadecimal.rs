@@ -116,7 +116,7 @@ impl CompaDecimal {
         })
     }
 
-    pub fn biguint_to_decimal(num: &BigUint) -> Result<CompaDecimal, CompaDecimalError> {
+    pub fn biguint_to_compa(num: &BigUint) -> Result<CompaDecimal, CompaDecimalError> {
         let compa_digits = get_compa_digits();
         let base = BigUint::from(compa_digits.len());
         let mut num = num.clone();
