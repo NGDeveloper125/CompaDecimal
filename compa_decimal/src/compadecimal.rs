@@ -98,7 +98,9 @@ impl CompaDecimal {
         T: PrimInt + Unsigned,
     {
         let compa_digits = get_compa_digits();
-        let base = T::from(compa_digits.len()).unwrap();
+        let base = T::from(compa_digits.len()).ok_or_else(|| CompaDecimalError {
+            error_message: "Failed to initialise generic type".to_string()
+        })?;
         let mut result = String::new();
 
         if num == T::zero() {
@@ -106,7 +108,9 @@ impl CompaDecimal {
         }
 
         while num > T::zero() {
-            let reminder = (num % base).to_usize().unwrap();
+            let reminder = (num % base).to_usize().ok_or_else(|| CompaDecimalError {
+            error_message: "Failed to convert reminder result to usize".to_string()
+        })?;
             result.push(compa_digits[reminder]);
             num = num / base;
         }
@@ -144,7 +148,9 @@ impl CompaDecimal {
     {
         let value_digits: Vec<char> = self.value.chars().collect();
         let compa_digits = get_compa_digits();
-        let base = T::from(compa_digits.len()).unwrap();
+        let base = T::from(compa_digits.len()).ok_or_else(|| CompaDecimalError {
+            error_message: "Failed to initialise generic type".to_string()
+        })?;
         let mut result: T = T::zero();
 
         for digit in value_digits {
