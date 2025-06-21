@@ -1,4 +1,5 @@
 use compa_decimal::*;
+use num::{BigInt, BigUint, One, Zero};
 use std::cmp::Ordering;
 
 #[test]
@@ -88,12 +89,25 @@ fn decimal_to_compa_test() {
     let compa_decimal1 = CompaDecimal::decimal_to_compa::<u8>(16).unwrap();
     assert_eq!(compa_decimal1, "D");
     let compa_decimal2 = CompaDecimal::decimal_to_compa::<u32>(1329).unwrap();
-    assert_eq!(compa_decimal2, "Cb");
+    assert_eq!(compa_decimal2, "b~");
     let compa_decimal3 = CompaDecimal::decimal_to_compa::<u64>(27068251).unwrap();
-    assert_eq!(compa_decimal3, "LwOa");
+    assert_eq!(compa_decimal3, "kWg}");
     let compa_decimal4 =
         CompaDecimal::decimal_to_compa::<u128>(340282366920938463463374607431768211455).unwrap();
-    assert_eq!(compa_decimal4, "a2o~TWI*I+5G('\\99=ab");
+    assert_eq!(compa_decimal4, "91\"<n.hl48T!YkTkA?1Z");
+}
+
+#[test]
+fn biguint_to_compa_test() {
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::zero()).unwrap();
+    assert_eq!(compa_decimal1, "0");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::one()).unwrap();
+    assert_eq!(compa_decimal1, "1");
+    let compa_decimal1 = CompaDecimal::biguint_to_compa(&BigUint::from(123u32)).unwrap();
+    assert_eq!(compa_decimal1, "1J");
+    let compa_decimal1 =
+        CompaDecimal::biguint_to_compa(&BigUint::from(138945729038763748276832u128)).unwrap();
+    assert_eq!(compa_decimal1, "HPzsKhzl#n2{");
 }
 
 #[test]
@@ -102,16 +116,29 @@ fn to_decimal_test() {
     assert_eq!(compa_decimal1.to_decimal::<u8>().unwrap(), 16);
 
     let compa_decimal2: CompaDecimal = "Cb".parse().unwrap();
-    assert_eq!(compa_decimal2.to_decimal::<u32>().unwrap(), 1329);
+    assert_eq!(compa_decimal2.to_decimal::<u32>().unwrap(), 1343);
 
     let compa_decimal3: CompaDecimal = "LwOa".parse().unwrap();
-    assert_eq!(compa_decimal3.to_decimal::<u64>().unwrap(), 27068251);
+    assert_eq!(compa_decimal3.to_decimal::<u64>().unwrap(), 27935996);
 
-    let compa_decimal4: CompaDecimal = "a2o~TWI*I+5G('\\99=ab".parse().unwrap();
+    let compa_decimal4: CompaDecimal = "a2o~TWI*I+5G('".parse().unwrap();
     assert_eq!(
         compa_decimal4.to_decimal::<u128>().unwrap(),
-        340282366920938463463374607431768211455
+        565984502558084335516371423
     );
+}
+
+#[test]
+fn to_biguint_test() {
+    let compa_decimal1: CompaDecimal = "abc".parse().unwrap();
+    let number = compa_decimal1.to_biguint().unwrap();
+    assert_eq!(number, BigUint::parse_bytes(b"100525", 10).unwrap());
+
+    let compa_decimal1: CompaDecimal = "This is a test for a long text to be turn into numbers"
+        .parse()
+        .unwrap();
+    let number = compa_decimal1.to_biguint().unwrap();
+    assert_eq!(number, BigUint::parse_bytes(b"31841552784196741090929648471941957080193990671456726377283361892016646254266411630046406212893117657668547", 10).unwrap())
 }
 
 #[test]
@@ -128,15 +155,15 @@ fn increase_by_test() {
 
     let mut compa_decimal2 = CompaDecimal::new();
     compa_decimal2 = compa_decimal2.increase_by::<u32>(1234).unwrap();
-    assert_eq!(compa_decimal2, "bB");
+    assert_eq!(compa_decimal2, "B~");
 
     let mut compa_decimal3 = CompaDecimal::new();
     compa_decimal3 = compa_decimal3.increase_by::<u64>(1234567).unwrap();
-    assert_eq!(compa_decimal3, "1r&$");
+    assert_eq!(compa_decimal3, "1p.Q");
 
     let mut compa_decimal4 = CompaDecimal::new();
     compa_decimal4 = compa_decimal4.increase_by::<u128>(1234556778785).unwrap();
-    assert_eq!(compa_decimal4, "1-Fq}q3");
+    assert_eq!(compa_decimal4, "1#VaH@U");
 }
 
 #[test]
@@ -147,15 +174,15 @@ fn decrease_by_test() {
 
     let mut compa_decimal1: CompaDecimal = "bB".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u32>(1234).unwrap();
-    assert_eq!(compa_decimal1, "0");
+    assert_eq!(compa_decimal1, "b");
 
     let mut compa_decimal1: CompaDecimal = "1r&$".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u64>(1234567).unwrap();
-    assert_eq!(compa_decimal1, "0");
+    assert_eq!(compa_decimal1, "3^g");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u128>(1234556778785).unwrap();
-    assert_eq!(compa_decimal1, "0");
+    assert_eq!(compa_decimal1, "9\"L%WT");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u8>(1).unwrap();
@@ -163,15 +190,15 @@ fn decrease_by_test() {
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u16>(100).unwrap();
-    assert_eq!(compa_decimal1, "1-Fq}p}");
+    assert_eq!(compa_decimal1, "1-Fq}p ");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u32>(2395784).unwrap();
-    assert_eq!(compa_decimal1, "1-Fp8j}");
+    assert_eq!(compa_decimal1, "1-Fpc~H");
 
     let mut compa_decimal1: CompaDecimal = "1-Fq}q3".parse().unwrap();
     compa_decimal1 = compa_decimal1.decrease_by::<u128>(234897382497).unwrap();
-    assert_eq!(compa_decimal1, "1Qe=6LX");
+    assert_eq!(compa_decimal1, "1q>uFz*");
 }
 
 #[test]
@@ -190,7 +217,7 @@ fn add_test() {
 
     let compa_decimal1: CompaDecimal = "aAswf".parse().unwrap();
     let compa_decimal1 = compa_decimal1.add("AsdgrW11").unwrap();
-    assert_eq!(compa_decimal1, "AsdMX7XG");
+    assert_eq!(compa_decimal1, "AsdMX6XG");
 }
 
 #[test]
@@ -209,7 +236,7 @@ fn subtract_test() {
 
     let compa_decimal1: CompaDecimal = "AsdMX7XG".parse().unwrap();
     let compa_decimal1 = compa_decimal1.subtract("AsdgrW11").unwrap();
-    assert_eq!(compa_decimal1, "aAswf");
+    assert_eq!(compa_decimal1, "aATwf");
 
     let compa_decimal1: CompaDecimal = "1".parse().unwrap();
     let compa_decimal1 = compa_decimal1.subtract("2");
